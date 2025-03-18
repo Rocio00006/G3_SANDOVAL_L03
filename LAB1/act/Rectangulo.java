@@ -1,4 +1,4 @@
-package lab01.act;
+package LAB1.act;
 
 public class Rectangulo{
     private Coordenada esquina1;

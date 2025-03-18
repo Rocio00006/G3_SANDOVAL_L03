@@ -1,4 +1,4 @@
-package lab01.act;
+package LAB1.act;
 
 public class Coordenada {
     private double x;
