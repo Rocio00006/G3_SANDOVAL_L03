@@ -22,8 +22,17 @@ public class Rectangulo{
     public void setEsquina2(Coordenada esquina2) {
         this.esquina2 = esquina2;
     }
-    @Override
+
+    //método de instancia 
+    public double calculoArea(){
+        double base, altura;
+        base = Math.abs(esquina1.getX()-esquina2.getX());
+        altura = Math.abs(esquina2.getY()-esquina1.getY());
+        return base*altura;
+    }
+
+    //@Override
     public String toString(){
-        return ("Rectangulo A = (["+esquina1.getX()+", "+esquina1.getY()+"], ["+esquina2.getX()+", "+esquina2.getY()+"])");
+        return "Rectangulo = (["+esquina1.toString()+"], ["+esquina2.toString()+"])";
     }
 }
