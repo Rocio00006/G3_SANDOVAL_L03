@@ -44,6 +44,7 @@ public class Principal {
     public static void relacionRectangulos(Rectangulo a, Rectangulo b){
         if(Verificador.esSobrePos(a, b)){
             System.out.println("Rectangulos A y B se sopreonen");
+            System.out.println("Áera de sobreposición; "+rectanguloSobre(a, b).calculoArea());
         }
         if(Verificador.esJunto(a, b)){
             System.out.println("Rectángluos A y B se juntan");
