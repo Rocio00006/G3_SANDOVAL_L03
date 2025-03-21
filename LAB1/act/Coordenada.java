@@ -53,6 +53,6 @@ public class Coordenada {
     //toString devuelve valores en formato específico
     @Override
     public String toString(){
-        return ("("+x+", "+y+")");
+        return "("+x+", "+y+")";
     }
 }
