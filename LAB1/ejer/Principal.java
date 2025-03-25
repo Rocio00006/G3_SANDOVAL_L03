@@ -30,8 +30,15 @@ public class Principal {
         Rectangulo rA = new Rectangulo(e1a, e2a);
         Rectangulo rB = new Rectangulo(e1b, e2b);
 
-        mostrarRectangulos(rA, rB);
-        relacionRectangulos(rA, rB);
+        //mostrarRectangulos(rA, rB);
+        //relacionRectangulos(rA, rB);
+
+        //creamos un contenedor para los rectangulos
+        ContainerRect rectangulos = new ContainerRect(3);
+        rectangulos.addRectangulo(rA);
+        rectangulos.addRectangulo(rB);
+        System.out.println("Los rectangulos añadidos son: ");
+        rectangulos.toString();
 
         sc.close();
     }
