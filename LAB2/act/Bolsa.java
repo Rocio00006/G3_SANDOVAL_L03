@@ -1,10 +1,10 @@
 package LAB2.act;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.ArrayList; //libreria que nos permite usar arraylist
+import java.util.Iterator;  //clase para iterar entre los arraylist 
 
 public class Bolsa <T> implements Iterable <T>{
-    //crear objeto de la clase arrayList con tipos de datos genéricos
+    //crea lista q es un arrayList que genérico
     private ArrayList<T> lista = new ArrayList<T>();
     private int tope; //variables que define el tamaño del array
 
@@ -25,6 +25,4 @@ public class Bolsa <T> implements Iterable <T>{
     public Iterator <T> iterator(){
         return lista.iterator();
     }
-
-
 }
