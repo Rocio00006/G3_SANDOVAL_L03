@@ -8,7 +8,6 @@ public class Golosina {
         this.nombre=nombre;
         this.peso=peso;
     }
-    //getter y setters 
     public String getNombre() {
         return nombre;
     }
@@ -21,5 +20,4 @@ public class Golosina {
     public void setPeso(double peso) {
         this.peso = peso;
     }
-    
 }
