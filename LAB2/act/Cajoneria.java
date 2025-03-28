@@ -25,10 +25,11 @@ public class Cajoneria <T> implements Iterable <Caja<T>> {
     }
     //metodo para buscar un elemento de las cajas
     public void search(T elemento){
+        //recorremos las cajas de la cajonería
         for(int i=0; i< cajoneria.size(); i++){
-            //caja tomará el valor de cada caja en a cajonería
+            //caja tomará el valor de cada caja en la cajonería
             Caja<T> caj = cajoneria.get(i);
-            if(caj.contiene(elemento)){
+            if(caj.contiene(elemento)==true){
                 System.out.println("Posición: "+caj.getContenido().get(i)+" Color caja: "+caj.getColor());
             }
         }
@@ -45,6 +46,22 @@ public class Cajoneria <T> implements Iterable <Caja<T>> {
         return null;
     }
 
+    @Override
+    //método que devuelve cadena de datos
+    public String toString() {
+        System.out.println("Posicion\tColor Caja\tObjeto");
+        for (int i = 0; i < cajoneria.size(); i++) {
+            Caja<T> caja = cajoneria.get(i);
+            for (T objeto : caja.getContenido()) {
+                System.out.printf("%d\t%s\t%s%n", 
+                    (i + 1), 
+                    caja.getColor(), 
+                    objeto.toString()
+                );
+            }
+        }
+        return "";
+    }
     //implementamos método abstracto de la interfaz Iterable
     public Iterator<Caja<T>> iterator() {
         return cajoneria.iterator();

@@ -20,4 +20,9 @@ public class Golosina {
     public void setPeso(double peso) {
         this.peso = peso;
     }
+    @Override
+    public String toString() {
+        return "Golosina [nombre=" + nombre + ", peso=" + peso + "]";
+    }
+    
 }

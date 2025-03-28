@@ -43,29 +43,6 @@ public class TestGen2 {
         // Imprimir el contenido de la cajoneria
         System.out.println("Contenido de la Cajonería:");
         cajoneria1.toString();
-
-
-        
-        
-
-        /*
-        // Búsqueda de golosinas por nombre
-        System.out.println("\nBuscando golosinas por nombre:");
-        cajoneria1.search(new Golosina("Trident", 0));
-
-        // Búsqueda de golosinas por peso
-        System.out.println("\nBuscando golosinas por peso:");
-        cajoneria1.search(new Golosina("", 15.0));
-
-        // Prueba de eliminación
-        System.out.println("\nEliminando una golosina:");
-        Golosina eliminada = cajoneria1.delete(new Golosina("Orbit", 8.2));
-        System.out.println("Golosina eliminada: " + eliminada);
-
-        // Imprimir cajonería después de eliminación
-        System.out.println("\nContenido de la Cajonería después de eliminación:");
-        cajoneria1.toString();
-        */
     }
 
     //método genérico para ver si existe un elemento en un arreglo de tipo T

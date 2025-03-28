@@ -1,7 +1,5 @@
 package LAB2.act;
 
-import java.util.ArrayList;
-
 public class Principal {
     public static void main(String[] args) {
         //creamos un objeto de bolsas de tipo genérico= Chocolatina

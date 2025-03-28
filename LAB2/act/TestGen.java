@@ -46,6 +46,7 @@ public class TestGen {
         System.out.println(c2.getMarca()+" existe? "+exist(chocolatinas, c2));    //true
         System.out.println(c4.getMarca()+" existe?"+exist(chocolatinas, c4));    //false
 
+        
     }
 
     //método genérico para ver si existe un elemento en un arreglo de tipo T

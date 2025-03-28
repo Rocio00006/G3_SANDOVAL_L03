@@ -18,7 +18,7 @@ public class TestGen3 {
         Chocolatina c4=new Chocolatina("Princesa");
         Chocolatina c5=new Chocolatina("ferrero");
 
-        //agregamos golosinas a las cajas, por ende a la cajonería
+        //agregamos chocolatinas a las cajas, por ende a la cajonería
         cajaRoja.add(c1);
         cajaRoja.add(c2);
         cajaRoja.add(c3);
@@ -29,14 +29,14 @@ public class TestGen3 {
         cajoneria2.add(cajaRoja);
         cajoneria2.add(cajaNegra);
 
-        //verificamos que hayan golosinas en la cajonería
+        //verificamos que hayan chocolatinas en la cajonería
         cajoneria2.search(c4);
         
         // Imprimir el contenido de la cajoneria
         System.out.println("Contenido de la Cajonería:");
         cajoneria2.toString();
 
-        //eliminamos una golosina de la cajonería
+        //eliminamos una chocolatina de la cajonería
         cajoneria2.delete(c3);
 
         // Imprimir el contenido de la cajoneria

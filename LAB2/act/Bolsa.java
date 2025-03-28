@@ -13,7 +13,7 @@ public class Bolsa <T> implements Iterable <T>{
         super();
         this.tope = tope;
     }
-    //método genérico que añade objetos de tipo T
+    //método que añade objetos de tipo T
     public void add(T objeto){
         if (lista.size()<=tope){
             lista.add(objeto);
