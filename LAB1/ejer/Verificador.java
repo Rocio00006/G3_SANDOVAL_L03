@@ -20,20 +20,20 @@ public class Verificador {
         y2r2 = Math.max(r2.getEsquina1().getY(), r2.getEsquina2().getY());
 
         
-        if(x1r1<x2r2 || x1r2< x2r1 || y1r1<y2r2 || y1r2<y2r1){
+        /*if(x1r1<x2r2 || x1r2< x2r1 || y1r1<y2r2 || y1r2<y2r1){
             return true;
         }
         else
-            return false;
+            return false;*/
 
         //condiciones para que se sobrepongan
         //no hay intersección si r1 está a ña derecho, izquierdo, arriba o debajo de r2
-        /*
+        
         if(x1r1 >=x2r2 || x2r1 <= x1r2 || y1r1 >= y2r2 || y2r1 <= y1r2){
             return false;
         }
         else
-            return true;*/
+            return true;
     }
 
     public static boolean esJunto(Rectangulo r1, Rectangulo r2){
@@ -43,7 +43,6 @@ public class Verificador {
 
         double x1r1, y1r1, x2r1, y2r1;
         double x1r2, y1r2, x2r2, y2r2;
-        
         //establecer esquinas de r1
         x1r1 = Math.min(r1.getEsquina1().getX(), r1.getEsquina2().getX());
         x2r1 = Math.max(r1.getEsquina1().getX(), r1.getEsquina2().getX());
@@ -98,9 +97,8 @@ public class Verificador {
 
         //condiciones para que se sobrepongan
         //no hay intersección si r1 está a ña derecho, izquierdo, arriba o debajo de r2
-        if(x1r1 > x2r2 || x2r1 < x1r2 || y2r1 < y1r2 || y1r1 > y2r2){
+        if(x1r1 > x2r2 || x2r1 < x1r2 || y2r1 < y1r2 || y1r1 > y2r2)
             return true;
-        }
         else
             return false;
     }
