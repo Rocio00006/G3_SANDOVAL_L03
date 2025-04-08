@@ -1,5 +1,6 @@
 package LAB4;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.*; //importará graphics
 
@@ -21,5 +22,28 @@ public class PythagorasTree extends JPanel{
         //llamada a la recursión
         trazaArbol(g2d, 350, 600, 100, -90, profundidad);
     }
+    //método que traza el árbol
+    private void trazaArbol(Graphics2D g, int x, int y, int lado, double angulo, int nivel){
+        if(nivel==0 || lado<2)
+            return;
+        int x2 = x+ (int) (lado *Math.cos(Math.toRadians(angulo)));
+        int y2 = y+ (int) (lado *Math.sin(Math.toRadians(angulo)));
 
+        g.drawLine(x, y, x2, y2);
+
+        int nuevoLado = (int) (lado *0.7);
+        trazaArbol(g, x2, y2, nuevoLado, angulo - 45, nivel - 1);
+        trazaArbol(g, x2, y2, nuevoLado, angulo + 45, nivel - 1);
+    }
+
+    //metodo para probar
+    public static void main(String[] args){
+        JFrame frame = new JFrame("Arbol de pitágoras");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(new PythagorasTree(6)); 
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
 }
+
