@@ -26,8 +26,8 @@ public class PythagorasTree extends JPanel{
     private void trazaArbol(Graphics2D g, int x, int y, int lado, double angulo, int nivel){
         if(nivel==0 || lado<2)
             return;
-        int x2 = x+ (int) (lado *Math.cos(Math.toRadians(angulo)));
-        int y2 = y+ (int) (lado *Math.sin(Math.toRadians(angulo)));
+        int x2 = x+ (int) (lado *Math.cos(Math.toRadians(angulo))); //nuevo punto final de la rama
+        int y2 = y+ (int) (lado *Math.sin(Math.toRadians(angulo))); //se convertirá en el inicio
 
         g.drawLine(x, y, x2, y2);
 
@@ -40,7 +40,7 @@ public class PythagorasTree extends JPanel{
     public static void main(String[] args){
         JFrame frame = new JFrame("Arbol de pitágoras");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new PythagorasTree(6)); 
+        frame.add(new PythagorasTree(3)); 
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
