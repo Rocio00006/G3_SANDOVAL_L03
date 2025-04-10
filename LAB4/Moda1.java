@@ -26,6 +26,5 @@ public class Moda1 {
             if(array[i]==ele)
                 suma ++;
         return suma;
-        
     }
 }
