@@ -6,7 +6,7 @@ public class Ejercicio1 {
             return true;
         return false;
     }
-    public static void verificarSuma(int[] arr){
+    public static boolean verificarSuma(int[] arr){
         //int n = arr.length -2; //cantidad de elementos*
         int su = 0;
 
@@ -20,22 +20,20 @@ public class Ejercicio1 {
             }
         }
         if(su == arr[arr.length-1]){
-            System.out.println("TRUE");
+            //System.out.println("TRUE");
+            return true;
         } else {
-            System.out.println("FALSE");
+            //System.out.println("FALSE");
+            return false;
         }
-
-        System.out.println("Suma quedó con: "+su);
-
     }
 
     public static void main(String[] args) {
         int[] arreglo = {5, 2, 4, 8, 10, 3, 14};
-        int[] arreglo2 = {5,4,8,10,3,5,27};
+        //int[] arreglo2 = {5,4,8,10,3,5,27};
+        //int[] arreglo3 = {5,4,8,10,3,6,27};
+        //int[] arreglo4 = {6, 2, 16, 5, 7, 10, 33};
 
-        
-        //System.out.println(verificar(arreglo));
-        //System.out.println(sumaElementos(arreglo));
         verificarSuma(arreglo);
     }
 }
