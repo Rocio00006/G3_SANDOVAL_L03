@@ -17,8 +17,9 @@ public class Node <E> {
         this.valor = valor;
         this.next = next;
     }
+    /*
     public Node(Node<E> nodo){
         this.valor = nodo.valor;
         this.next = nodo.next;
-    }
+    }*/
 }
