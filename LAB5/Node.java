@@ -1,25 +1,38 @@
 package LAB5;
 
-public class Node <E> {
-    public E valor;
-    public Node<E> next;
+public class Node <E>{
+    private E valor;
+    private Node<E> next;
 
     //constructores
-    public Node(){
-        this.valor= null;
-        this.next = null;
-    }
+    //recibe solo el valor
     public Node(E valor){
         this.valor= valor;
         this.next=null;
     }
+    //para cuando recibe el valor, y el nodo siguiente
     public Node(E valor, Node<E> next) {
         this.valor = valor;
         this.next = next;
     }
+
+    //setters y getters
+    public void setValor(E valor){
+        this.valor = valor;
+    }
+    public void setNext(Node<E> next){
+        this.next = next;
+    }
+    public E getValor(){
+        return valor;
+    }
+    public Node<E> getNext(){
+        return next;
+    }
+    
     /*
-    public Node(Node<E> nodo){
-        this.valor = nodo.valor;
-        this.next = nodo.next;
+    public Node(Node<E> nuevoNodo){
+        this.valor = nuevoNodo.valor;
+        this.next = nuevoNodo.next;
     }*/
 }
