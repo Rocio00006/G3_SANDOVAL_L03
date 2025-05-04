@@ -26,6 +26,25 @@ public class LinkedList<E>  {
         return conta;
     }
 
+    //** metodo para eliminar la lista
+    public void destroyList(){
+        lista = null;
+    }
+
+    //**método para buscar un elemento específico 
+    public boolean search(E elemento){
+        boolean existe = false;
+
+        Node<E> aux = lista;
+        while (aux!= null){
+            if(aux.getValor().equals(elemento)){
+                existe = true;
+            }
+            aux = aux.getNext();
+        }
+        return existe;
+    }
+
     //**método para insertarun dato/valor al inicio
     public void insertFirst(E dato){
         Node<E> nuevo = new Node<E>(dato);
@@ -52,4 +71,24 @@ public class LinkedList<E>  {
         //nuevo.setNext(null); no es necesario
     }
 
+    //*** método par eliminar un nodo
+    public void removeNode(E elemento){
+        //verificar que la lista no sea vacía;
+        if(isEmpty()){
+            System.out.println("No existe ese elemento");
+        } 
+        //si el nodo a eliminar es el primero
+        if(lista.getValor().equals(elemento)){
+            lista.setNext(lista);
+        }
+
+        //el nodo está después del primer elemento
+        Node<E> aux = lista;
+        while (aux.getNext()!=null) {
+            if(aux.getNext().getValor().equals(elemento)){
+                aux.setNext(aux.getNext().getNext());
+            }
+            aux = aux.getNext();
+        }
+    }
 }
