@@ -30,5 +30,4 @@ public class Tarea {
     public String toString() {
         return "Tarea [titulo=" + titulo + ", prioridad=" + prioridad + "]";
     }
-    
 }

@@ -39,6 +39,7 @@ public class LinkedList<E>  {
         while (aux!= null){
             if(aux.getValor().equals(elemento)){
                 existe = true;
+                return existe;  //cuando lo encuentra, ya no busca 
             }
             aux = aux.getNext();
         }
@@ -51,15 +52,18 @@ public class LinkedList<E>  {
         if(isEmpty()){
             lista = nuevo;
         }
-        nuevo.setNext(lista);
-        lista = nuevo;
+        else{
+            nuevo.setNext(lista);
+            lista = nuevo;
+        }
     }
 
     //**método para insertar un dato al final
-    public void insetarFinal(E dato){
+    public void insertFinal(E dato){
         Node<E> nuevo = new Node<E>(dato);
         if(isEmpty()){
             lista = nuevo;
+            return;
         }
 
         Node<E> actual = lista;
@@ -76,10 +80,11 @@ public class LinkedList<E>  {
         //verificar que la lista no sea vacía;
         if(isEmpty()){
             System.out.println("No existe ese elemento");
+            return; //omite las siguiente líneas
         } 
         //si el nodo a eliminar es el primero
         if(lista.getValor().equals(elemento)){
-            lista.setNext(lista);
+            lista = lista.getNext();
         }
 
         //el nodo está después del primer elemento
@@ -88,6 +93,20 @@ public class LinkedList<E>  {
             if(aux.getNext().getValor().equals(elemento)){
                 aux.setNext(aux.getNext().getNext());
             }
+            aux = aux.getNext();
+        }
+    }
+
+    //** método para mostrar la lista
+    public void print(){
+        if(isEmpty()){
+            System.out.println("Lista vacía");
+            return;
+        }
+        Node<E> aux = lista;
+        while(aux!=null){
+            //System.out.println(aux.toString());
+            System.out.println(aux.getValor());
             aux = aux.getNext();
         }
     }
