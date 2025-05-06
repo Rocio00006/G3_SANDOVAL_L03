@@ -15,7 +15,6 @@ public class Node <E>{
         this.valor = valor;
         this.next = next;
     }
-
     //setters y getters
     public void setValor(E valor){
         this.valor = valor;
@@ -29,10 +28,4 @@ public class Node <E>{
     public Node<E> getNext(){
         return next;
     }
-    
-    /*
-    public Node(Node<E> nuevoNodo){
-        this.valor = nuevoNodo.valor;
-        this.next = nuevoNodo.next;
-    }*/
 }
