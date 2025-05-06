@@ -4,7 +4,6 @@ public class Tarea {
     private String titulo;
     private int prioridad;
     
-    //constructor
     public Tarea(){
         this.titulo = "";
         this.prioridad = 0;
@@ -28,6 +27,6 @@ public class Tarea {
     }
     @Override
     public String toString() {
-        return "Tarea [titulo=" + titulo + ", prioridad=" + prioridad + "]";
+        return "Tarea [" + titulo + ", P:" + prioridad + "]";
     }
 }
