@@ -9,7 +9,7 @@ public class ArrList <E> {
         this.lista = (E[]) new Object[capacidad];
         this.tmñActual = 0;
     }
-    //método para ver si la lsita está vac+ia
+    //método para ver si la lsita está vacia
     public boolean listaVacia(){
         if(tmñActual == 0)
             return true;
@@ -52,9 +52,12 @@ public class ArrList <E> {
             tmñActual--;
             return;
         }
-        for(int i=0; i<tmñActual;i++){
-            if(lista[i].equals(elemento))
-                lista[i]=null;
+        //obtenemos la posicion del elemento
+        int posi = indiceDe(elemento);
+        lista[posi] = null; //la "eliminamos"
+        //luego debemos recorrer al siguiete
+        for(int i=posi; i<tmñActual;i++){
+            lista[i]=lista[i+1];
         }
     }
     public boolean buscar(E elemento){
@@ -75,25 +78,50 @@ public class ArrList <E> {
                 System.out.println(lista[i]);
         }
     }
+    //método para invertir una lista
+    //al invertir solo se debe recorrer n/2
+    public void invertirLista(){
+        E[] cLista = lista;
+        E temp = null;
+        int posiUlt = tmñActual-1;
+        for(int i =0; i<tmñActual/2;i++){
+            temp = cLista[i]; //guarda el un ele
+            cLista[i] = cLista[posiUlt];
+            cLista[posiUlt]=temp;
+            posiUlt--;
+        }
+        lista = cLista;
+    }
     //método q devuleve posicion de una elemento
-    public void indiceDe(E elemento){
-
+    public int indiceDe(E elemento){
+        for(int i=0;i<tmñActual;i++){
+            if(lista[i].equals(elemento))
+                return i;
+        }
+        return -1;
     }
 
-
     public static void main(String[] args) {
-        Tarea t1 = new Tarea("Algoritmos", 1);
-        Tarea t2 = new Tarea("SIA", 10);
+        Tarea t1 = new Tarea("Algoritmos", 5);
+        Tarea t2 = new Tarea("SIA", 1);
         Tarea t3 = new Tarea("redes", 4);
 
         ArrList<Tarea> listaTa = new ArrList<>(5);
+        System.out.println("*** Insertar tareas:");
         listaTa.insertarElemento(t1);
         listaTa.insertarElemento(t2);
         listaTa.insertarElemento(t3);
         listaTa.mostrarLista();
 
-        System.out.println("Eliminamos una tarea");
-        listaTa.eliminar(t2);
+        System.out.println("\n***Eliminamos una tarea: "+t1.getTitulo());
+        listaTa.eliminar(t1);
+        listaTa.mostrarLista();
+
+        System.out.println("\n***Verificar si una tarea existe:");
+        System.out.println("Existe tarea SIA: "+listaTa.buscar(t3));
+
+        System.out.println("\n***Invertimos lista");
+        listaTa.invertirLista();
         listaTa.mostrarLista();
     }
 }
