@@ -1,17 +1,15 @@
 package LAB6.actividad1;
 
-//en las pilas: el ultimo sale
-//STACK: LIFO-> Last In Last Out
+//pilas LIFO last in last out
 public class StackArray<E extends Object> {
     private E[] array;  //arreglo en sí
     private int tope;   //posicion el último elemento
-    private int tmñMax; //tamaño maximo del arreglo
 
     public StackArray(int n){ 
         this.array = (E[]) new Object[n]; 
         tope = -1;  //arreglo vacio
-        tmñMax = n;
     } 
+    //agrega un elemento al tope de la pila
     public void push(E ele){
         //primero verificar si está lleno
         if(isFull()){
@@ -19,28 +17,49 @@ public class StackArray<E extends Object> {
             return;
         }
         array[tope+1] = ele;
-        tope = tope +1;
+        tope++;
     }
-    public void pop(){
+    //elimina y devuelve el el elemento en el tope
+    public E pop(){
+        //si está vacio
+        if(isEmpty()){
+            System.out.println("Stack está vacío");
+            return null;
+        }
+        E t = array[tope];
         array[tope] = null;
         tope--;
+        return t;
+    }
+    //solo devuleve el elemento en el tope del stack
+    public E top(){
+        return array[tope];
     }
     public boolean isEmpty(){
         if(tope==-1){
-            return false;
+            return true;
         }
         return false;
     }
     public boolean isFull(){
-        if(tope==tmñMax-1){ //signidica que ha llegado al máximo
+        if(tope==array.length-1){
             return true;
         }
         return false;
     }
     public void printStack(){
         for(int i = 0; i<array.length; i++){
-            System.out.println(array[i]);
+            if(array[i]!=null)
+                System.out.println(array[i]);
         }
+    }
+    @Override
+    public String toString(){
+        for(int i = 0; i<array.length; i++){
+            if(array[i]!=null)
+            return (String) array[i].toString();
+        }
+        return "";
     }
     public static void main(String[] args) {
         StackArray<Integer> pila = new StackArray<Integer>(5);
