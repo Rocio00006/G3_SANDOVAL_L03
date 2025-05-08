@@ -39,14 +39,16 @@ public class Principal {
         rectangulos.addRectangulo(rB);
         System.out.println("Los rectangulos añadidos son: ");
         rectangulos.toString();
-
+        
         sc.close();
     }
+
     //mostrar la información de cada rectángulo
     public static void mostrarRectangulos(Rectangulo a, Rectangulo b){
         System.out.println("Rectangulo A;  "+a.toString());
         System.out.println("Rectangulo B: "+b.toString());
     }
+    
     //método para verificar las relaciones entre los rectangulos
     public static void relacionRectangulos(Rectangulo a, Rectangulo b){
         if(Verificador.esSobrePos(a, b)){
@@ -90,5 +92,4 @@ public class Principal {
         Rectangulo r = new Rectangulo(c1, c2);
         return r;
     }
-
 }

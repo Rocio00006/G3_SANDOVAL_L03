@@ -31,7 +31,7 @@ public class Rectangulo{
         return base*altura;
     }
 
-    //@Override
+    @Override
     public String toString(){
         return "Rectangulo = (["+esquina1.toString()+"], ["+esquina2.toString()+"])";
     }

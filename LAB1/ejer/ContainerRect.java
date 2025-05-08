@@ -5,7 +5,7 @@ public class ContainerRect {
     private double [] arregloDistancias;
     private double[] arregloAreas;
     private int n; //número máximo de rectángulos
-    public static int numRec; //contador variable de clase 
+    public static int numRec = 0; //contador de rectan, y variable de clase 
 
     //constructor
     public ContainerRect(int n){
@@ -45,7 +45,6 @@ public class ContainerRect {
         }
         return "";
     }
-
 }
 
 /*
