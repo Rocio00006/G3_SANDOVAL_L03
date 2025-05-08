@@ -4,14 +4,14 @@ public class ViajeMasBarato {
 
     // Función para encontrar el costo mínimo entre todos los embarcaderos
     public static int[][] calcularCostosMinimos(int[][] T) {
-        int n = T.length;
-        int[][] C = new int[n][n];
+        int n = T.length;   //representa el número de filas
+        int[][] C = new int[n][n];  //creación de una matriz cuadrada 
 
         // Inicializar la matriz C con valores máximos, excepto la diagonal con 0
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == j) {
-                    C[i][j] = 0;
+        for (int i = 0; i < n; i++) {       //i recorre las filas
+            for (int j = 0; j < n; j++) {   //j recorre las columnas de cada fila
+                if (i == j) {           //cuando i=j, tonces están en la diagonal
+                    C[i][j] = 0;        //diagonal se establece en 0
                 } else {
                     C[i][j] = T[i][j];  // si hay valor, lo copia; si no, asumimos que T[i][j] = Integer.MAX_VALUE
                 }
@@ -20,10 +20,12 @@ public class ViajeMasBarato {
 
         // Aplicar programación dinámica
         for (int i = n - 2; i >= 0; i--) {
-            for (int j = i + 1; j < n; j++) {
+            for (int j = i + 1; j < n; j++) {   //parte superior de la matriz 
                 for (int k = i + 1; k < j; k++) {
+                    //if verifica si tanto T[i][k] como C[k][j] son diferentes de Integer.MAX_VALUE
                     if (T[i][k] != Integer.MAX_VALUE && C[k][j] != Integer.MAX_VALUE) {
-                        C[i][j] = Math.min(C[i][j], T[i][k] + C[k][j]);
+                        //calcula suma de T[i][k] y C[k][j], y compara con el valor actual C[i][j]
+                        C[i][j] = Math.min(C[i][j], T[i][k] + C[k][j]); //asigna valor mínimo
                     }
                 }
             }
@@ -62,3 +64,5 @@ public class ViajeMasBarato {
         imprimirMatriz(C);
     }
 }
+
+//impresión de los casos de prueba en gpt
