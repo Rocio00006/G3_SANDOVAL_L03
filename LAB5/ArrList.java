@@ -1,5 +1,7 @@
 package LAB5;
 
+import java.util.Arrays;
+
 public class ArrList <E> {
     private int tmñActual;
     private E[] lista;
@@ -23,21 +25,22 @@ public class ArrList <E> {
     }
     //método para agregar un elemento al final
     public void insertarElemento(E ele){
-        if(listaVacia()){
+        /*if(listaVacia()){
             lista[0] = ele;
             tmñActual++;
             return;
-        }
+        }*/
         if(listaLlena())
             System.out.println("LISTA LLENA");
         //o podría ser lista[tmñActual++] = ele;
-        for(int i=0; i<lista.length;i++){
+        lista[tmñActual++] = ele;
+        /*for(int i=0; i<lista.length;i++){
             if(lista[i]==null){
                 lista[i] = ele;
                 tmñActual++;
                 break;
             }
-        }  
+        } */ 
     }
     //método par aeliminar un elemento especi
     public void eliminar(E elemento){
@@ -101,6 +104,22 @@ public class ArrList <E> {
         return -1;
     }
 
+    public E[] getLista(){
+        return lista;
+    }
+    public int getTmñ(){
+        return tmñActual;
+    }
+    public void setTmñActual(int tmñActual) {
+        this.tmñActual = tmñActual;
+    }
+    public void setLista(E[] lista) {
+        this.lista = lista;
+    }
+    @Override
+    public String toString() {
+        return "ArrList [tmñActual=" + tmñActual + ", lista=" + Arrays.toString(lista) + "]";
+    }
     public static void main(String[] args) {
         Tarea t1 = new Tarea("Algoritmos", 5);
         Tarea t2 = new Tarea("SIA", 1);

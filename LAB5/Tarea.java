@@ -29,4 +29,16 @@ public class Tarea {
     public String toString() {
         return "Tarea [" + titulo + ", P:" + prioridad + "]";
     }
+    //sobreescribir para poder comparar
+    @Override
+    public boolean equals(Object obj){
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass()) 
+            return false;
+
+        Tarea tarea = (Tarea) obj;
+        return prioridad == tarea.prioridad &&
+               (titulo != null ? titulo.equals(tarea.titulo) : tarea.titulo == null);
+    }
 }

@@ -57,7 +57,7 @@ public class GestorTareas<T>{
 
         Tarea t1 = new Tarea("Algoritmos", 1);
         Tarea t2 = new Tarea("SIA", 10);
-        Tarea t3 = new Tarea("redes", 4);
+        Tarea t3 = new Tarea("REDES", 4);
 
         System.out.println("=== Agregando tareas ===");
         gestor.agregarTarea(t3);
@@ -65,10 +65,13 @@ public class GestorTareas<T>{
         gestor.agregarTarea(t1);
         gestor.imprimirTareas();
 
-        /*System.out.println("\n=== Verificando si existe una tarea ===");
+        System.out.println("\n=== Mostrando lista de tareas ===");
+        gestor.imprimirTareas();
+
+        System.out.println("\n=== Verificando si existe una tarea ===");
         System.out.println("¿Contiene tarea SIA: " + gestor.contineneTarea(t2));
 
-        System.out.println("\n=== Eliminando una tarea redes ===");
+        System.out.println("\n=== Eliminando tarea REDES ===");
         boolean eliminada = gestor.eliminarTarea(t3);
         System.out.println("¿Se eliminó la tarea?: " + eliminada);
         gestor.imprimirTareas();
@@ -77,7 +80,7 @@ public class GestorTareas<T>{
         System.out.println("Total: " + gestor.contarTarea());
 
         System.out.println("\n=== Tarea más prioritaria ===");
-        System.out.println("Más prioritaria: " + gestor.obtenerMayorPrioridad());*/
+        System.out.println("Más prioritaria: " + gestor.obtenerMayorPrioridad());
 
         System.out.println("\n=== Mostrando lista de tareas ===");
         gestor.imprimirTareas();
