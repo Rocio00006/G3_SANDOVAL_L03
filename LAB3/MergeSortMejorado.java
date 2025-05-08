@@ -3,65 +3,51 @@ package LAB3;
 import java.util.Arrays;
 
 public class MergeSortMejorado {
-    private static final int UMBRAL = 10; // Punto de cambio a Insertion Sort
+    public static void mergeSort(int[] arr, int[] aux, int izquierda, int derecha) {
+        if (izquierda < derecha) { // O(1)
+            int medio = izquierda + (derecha - izquierda) / 2; //O(1)
 
-    public static void mergeSort(int[] arr, int izquierda, int derecha) {
-        if (derecha - izquierda <= UMBRAL) {
-            insertionSort(arr, izquierda, derecha);
-            return;
-        }
-        
-        if (izquierda < derecha) {
-            int medio = izquierda + (derecha - izquierda) / 2;
+            // Llamadas recursivas para dividir el arreglo en dos mitades
+            mergeSort(arr, aux, izquierda, medio); // T(n/2) == O(log n)
+            mergeSort(arr, aux, medio + 1, derecha); // T(n/2) == O(log n)
 
-            mergeSort(arr, izquierda, medio);
-            mergeSort(arr, medio + 1, derecha);
-
-            merge(arr, izquierda, medio, derecha);
+            // Fusionar las mitades ordenadas
+            merge(arr, aux, izquierda, medio, derecha);         //O(n)
         }
     }
 
-    private static void insertionSort(int[] arr, int izquierda, int derecha) {
-        for (int i = izquierda + 1; i <= derecha; i++) {
-            int clave = arr[i];
-            int j = i - 1;
+    // Método para fusionar dos subarreglos ordenados usando un arreglo auxiliar
+    public static void merge(int[] arr, int[] aux, int izquierda, int medio, int derecha) {
+        //hacer una copia 
+        System.arraycopy(arr, izquierda, aux, izquierda, derecha - izquierda + 1); // O(n)
 
-            while (j >= izquierda && arr[j] > clave) {
-                arr[j + 1] = arr[j];
-                j--;
-            }
-            arr[j + 1] = clave;
-        }
-    }
+        int i = izquierda, j = medio + 1, k = izquierda;
 
-    private static void merge(int[] arr, int izquierda, int medio, int derecha) {
-        int[] temp = Arrays.copyOfRange(arr, izquierda, derecha + 1);
-
-        int i = 0, j = medio - izquierda + 1, k = izquierda;
-
-        while (i <= medio - izquierda && j <= derecha - izquierda) {
-            if (temp[i] <= temp[j]) {
-                arr[k++] = temp[i++];
+        //mezclar los dos subarreglos ordenados en el arreglo original
+        while (i <= medio && j <= derecha) { // O(n)
+            if (aux[i] <= aux[j]) { //O(1)
+                arr[k++] = aux[i++]; //O(1)
             } else {
-                arr[k++] = temp[j++];
+                arr[k++] = aux[j++]; //O(1)
             }
         }
 
-        while (i <= medio - izquierda) {
-            arr[k++] = temp[i++];
+        //copiar elementos restantes
+        while (i <= medio) { //O(n)
+            arr[k++] = aux[i++]; // O(1)
         }
 
-        while (j <= derecha - izquierda) {
-            arr[k++] = temp[j++];
-        }
+        // No es necesario copiar los elementos restantes del segundo subarreglo 
+        // porque ya están en su lugar en 'arr'.
     }
 
+    // Método de prueba
     public static void main(String[] args) {
-        int[] arr = {12, 11, 13, 5, 6, 7, 3, 9, 2, 10, 4, 8, 1};
-        System.out.println("Arreglo original: " + Arrays.toString(arr));
+        int[] arr = {38, 27, 43, 3, 9, 82, 10}; //O(1)
+        int[] aux = new int[arr.length]; //O(n) (espacio extra)
 
-        mergeSort(arr, 0, arr.length - 1);
+        mergeSort(arr, aux, 0, arr.length - 1); //O(n log n)
 
-        System.out.println("Arreglo ordenado: " + Arrays.toString(arr));
+        System.out.println("Arreglo ordenado: " + Arrays.toString(arr)); //O(n)
     }
 }

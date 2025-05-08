@@ -1,68 +1,72 @@
 package LAB3;
 
-import java.util.Arrays;
-
 public class MergeSort {
-    public static void mergeSort(int[] arr, int izquierda, int derecha) {
-        if (izquierda < derecha) {//compara si izquierda es menor a derecha
-            int medio = izquierda + (derecha - izquierda) / 2;
-            
-            // Dividir el arreglo en dos mitades
-            mergeSort(arr, izquierda, medio); //primera mitad
-            mergeSort(arr, medio + 1, derecha); //mitd sobrante
-            
-            // Combinar las mitades ordenadas
-            merge(arr, izquierda, medio, derecha);
+    //método principal mergeSort, inicia ordenamiento
+    public static void mergeSort(int[] arr){
+
+        //si arreglo tiene 0 o 1 elemento ya está ordenado
+        if(arr.length<=1)
+            return;
+        
+        //dividir el arreglo en mitades
+        int mitad = arr.length/2;
+        int[] izquierda = new int[mitad]; 
+        int[] derecha = new int[arr.length-mitad];
+
+        //copiar elementos a los subarreglos
+        for(int i=0; i< mitad; i++){
+            izquierda[i]=arr[i];
         }
-    } 
-
-    //metodo merge
-    public static void merge(int[] arr, int izquierda, int medio, int derecha) {
-        int n1 = medio - izquierda + 1;
-        int n2 = derecha - medio;
-
-        int[] izquierdaArr = new int[n1];
-        int[] derechaArr = new int[n2];
-
-        // Copiar datos a arreglos temporales
-        for (int i = 0; i < n1; i++)
-            izquierdaArr[i] = arr[izquierda + i];
-        for (int j = 0; j < n2; j++)
-            derechaArr[j] = arr[medio + 1 + j];
-
-        // Fusionar los arreglos temporales
-        int i = 0, j = 0, k = izquierda;
-        while (i < n1 && j < n2) {
-            if (izquierdaArr[i] <= derechaArr[j]) {
-                arr[k] = izquierdaArr[i];
-                i++;
-            } else {
-                arr[k] = derechaArr[j];
-                j++;
-            }
-            k++;
+        for(int i=mitad; i<arr.length; i++){
+            derecha[i-mitad] = arr[i];
         }
-        // Copiar elementos restantes de izquierdaArr[], si hay alguno
-        while (i < n1) {
-            arr[k] = izquierdaArr[i];
-            i++;
-            k++;
-        }
-        // Copiar elementos restantes de derechaArr[], si hay alguno
-        while (j < n2) {
-            arr[k] = derechaArr[j];
-            j++;
-            k++;
-        }  
+
+        //ordenar recursivamente ambas mitades
+        mergeSort(izquierda);
+        mergeSort(derecha);
+
+        //combinar mitad ordenadas
+        merge(arr, izquierda, derecha);
     }
 
-    //main para probar
-    public static void main(String[] args) {
-        int[] arr = {12, 11, 13, 5, 6, 7};
-        System.out.println("Arreglo original: " + Arrays.toString(arr));
-        
-        mergeSort(arr, 0, arr.length - 1);
+    //método para combinar subarreglos ordenados
+    public static void merge(int[] arr, int[] izquierda, int[] derecha){
+        int i=0, j=0, k=0;
 
-        System.out.println("Arreglo ordenado: " + Arrays.toString(arr));
+        //verificar que haya elementos en ambos subarreglos
+        while(i<izquierda.length && j<derecha.length){
+            if(izquierda[i]<= derecha[i]){
+                arr[k++] = izquierda[i++];
+            } else{
+                arr[k++]= derecha[j++];
+            }
+        }
+        //copiar elementos restantes de izquierda
+        while (i<izquierda.length) {
+            arr[k++]=izquierda[i++];
+        }
+        //copiar elementos restantes de derecha
+        while (j < derecha.length) {
+            arr[k++] = derecha[j++];
+        }
+    }
+    // Método auxiliar para imprimir un arreglo
+    public static void imprimirArreglo(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+    }
+    
+    // Método principal para prueba
+    public static void main(String[] args) {
+        int[] arreglo = {12, 11, 13, 5, 6, 7};
+        System.out.println("Arreglo original:");
+        imprimirArreglo(arreglo);
+        
+        mergeSort(arreglo);
+        
+        System.out.println("Arreglo ordenado:");
+        imprimirArreglo(arreglo);
     }
 }
