@@ -22,7 +22,6 @@ public class StackArray<E extends Object> {
         tope = tope +1;
     }
     public void pop(){
-        System.out.println("Este es el tope: "+tope);
         array[tope] = null;
         tope--;
     }
@@ -51,6 +50,7 @@ public class StackArray<E extends Object> {
         pila.printStack();
         pila.pop();
         pila.printStack();
+        
     }
 
 }
