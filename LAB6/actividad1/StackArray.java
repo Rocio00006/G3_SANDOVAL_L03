@@ -1,13 +1,15 @@
 package LAB6.actividad1;
 
 //pilas LIFO last in last out
-public class StackArray<E extends Object> {
-    private E[] array;  //arreglo en sí
+
+public class StackArray<E> {
+    private E[] array;  //arreglo para aalmcenar elementos de la pila
     private int tope;   //posicion el último elemento
 
+    //constructor recibe el tamaño del arreglo
     public StackArray(int n){ 
         this.array = (E[]) new Object[n]; 
-        tope = -1;  //arreglo vacio
+        tope = -1;  //arreglo vacio tiene a top en -1
     } 
     //agrega un elemento al tope de la pila
     public void push(E ele){
@@ -16,7 +18,7 @@ public class StackArray<E extends Object> {
             System.out.println("Stack está re lleno");
             return;
         }
-        array[tope+1] = ele;
+        array[tope+1] = ele; //ultimo ele ingresado está en la posi tope
         tope++;
     }
     //elimina y devuelve el el elemento en el tope

@@ -16,7 +16,7 @@ public class Test {
 
         System.out.println("\nCon OBJETOS String");
         StackArray<String> pila2 = new StackArray<String>(4);
-        System.out.println("Agregando elementos: ");
+        System.out.println("Agregando elementos... ");
         pila2.push("Hola");
         pila2.push("Como");
         pila2.push("estas");
