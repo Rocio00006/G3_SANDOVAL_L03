@@ -167,4 +167,5 @@ public class LinkedList<E>  {
     public Node<E> getFirstNode(){
         return lista;
     }
+
 }

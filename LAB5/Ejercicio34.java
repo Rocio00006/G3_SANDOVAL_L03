@@ -4,7 +4,7 @@ public class Ejercicio34 {
     public static <T> void insertarAlFinal(Node<T> head, T valor){
         Node<T> nuevo = new Node<T>(valor);
         Node<T> actu = head;
-
+        //queremos llegar al final
         while(actu.getNext()!=null){
             actu = actu.getNext(); //llegar al ult nodo
         }   

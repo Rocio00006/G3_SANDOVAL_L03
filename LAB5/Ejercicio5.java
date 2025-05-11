@@ -23,11 +23,13 @@ public class Ejercicio5 {
         LinkedList<Integer> l1 = new LinkedList<>();
         l1.insertFinal(20);
         l1.insertFinal(15);
+        System.out.println("Primera lista");
         l1.print();
 
         LinkedList<Integer> l2 = new LinkedList<>();
         l2.insertFinal(20);
-        l2.insertFinal(5);
+        l2.insertFinal(10);
+        System.out.println("Segunda lista");
         l2.print();
 
         System.out.println("SON IGUALES?: "+sonIguales(l1, l2));
