@@ -105,7 +105,7 @@ public class PriorityQueueLinkSort<E, N extends Comparable<N>> implements Priori
             aux = aux.getNext();
         }*/
 
-        StringBuilder sb = new StringBuilder("Cola de prioridad: [");
+        StringBuilder sb = new StringBuilder("Cola de prioridad: \n[");
         Node<EntryNode> auxi = first;
         while (auxi != null) {
             sb.append(auxi.getValor());

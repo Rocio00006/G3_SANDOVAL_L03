@@ -1,4 +1,4 @@
-package LAB6.actividad3;
+package LAB6.ejercicio1;
 
 public class ExceptionIsEmpty extends Exception {
     public ExceptionIsEmpty(String message){
