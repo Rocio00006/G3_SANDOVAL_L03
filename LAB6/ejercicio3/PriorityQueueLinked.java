@@ -6,7 +6,7 @@ public class PriorityQueueLinked<E> implements PriorityQueue<E, Integer>{
     @SuppressWarnings("unchecked")
     public PriorityQueueLinked(int nPrio){
         //arreglo de tipo colas enlazadas genéricas
-        this.colasPrio = (QueueLink<E>[]) new Object[nPrio];
+        this.colasPrio = new QueueLink[nPrio];
         //inicializamos cada cola de tipo queueLink
         for(int i=0; i<nPrio;i++){
             colasPrio[i] = new QueueLink<>();
@@ -16,7 +16,7 @@ public class PriorityQueueLinked<E> implements PriorityQueue<E, Integer>{
     public void enqueue(E x, Integer pr){
         colasPrio[pr].enqueue(x);
     }
-   public E dequeue() throws ExceptionIsEmpty{
+    public E dequeue() throws ExceptionIsEmpty{
         //recorremos la cola desde el final
         for(int i=colasPrio.length-1;i>=0;i--){
             if(!colasPrio[i].isEmpty()){
@@ -48,5 +48,12 @@ public class PriorityQueueLinked<E> implements PriorityQueue<E, Integer>{
                 return false;
         }
         return true;
+    }
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Cola Prioriodad:\n");
+        for (int i = colasPrio.length - 1; i >= 0; i--) {
+            sb.append("Prioridad ").append(i).append(": ").append(colasPrio[i]).append("\n");
+        }
+        return sb.toString();
     }
 }
