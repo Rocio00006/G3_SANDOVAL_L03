@@ -3,21 +3,23 @@ package LAB6.ejercicio2;
 public class QueueArray<E> {
     E[] arrCola;
     E front;    //primer elemento ingresado 
-    E back;
-    int posFront;   //siempre será 0
-    int posBack;
+    E back;     //último elemento
+    int posFront;   //siempre será 0, si no esta vacia
+    int posBack;    //posición del último elemento
 
     @SuppressWarnings("unchecked")
     public QueueArray(int n){
         this.arrCola = (E[]) new Object[n];
         this.front = null;
         this.back = null;
-        this.posBack=0;
-        this.posFront=0;    //siempre será 0
+        this.posBack=-1;
+        this.posFront=-1;   
     }
     //encolar: agregar un elemento al final
     public void enqueue(E x){
         if(isEmpty()){
+            posFront=0;
+            posBack=0;
             arrCola[posFront] = x;
             return;
         }
@@ -25,27 +27,31 @@ public class QueueArray<E> {
             System.out.println("COLA LLENA");
             return;
         }
-        //si ya hay elementos
+
+        //si ya hay elementos en la cola
         for(int i=0; i<arrCola.length;i++){
             if(arrCola[i]==null){
                 arrCola[i]=x;
                 posBack=i;
-                //back = arrCola[posBack];
                 return;
             }
         }
-        /*/
-        //si ya hay elementos en la cola
-        for(int i=arrCola.length-2; i>=0;i--){
-            arrCola[i+1] = arrCola[i];
-            if(i==0){
-                arrCola[i] = x;
-            }
-        }*/
     }
-    //eliminar el primer elemento
-    public E dequeue(E x) throws ExceptionIsEmpty{
-        return front;
+    //elimina y devuleve el primer elemento o sea front
+    public E dequeue() throws ExceptionIsEmpty{
+        if(isEmpty())
+            throw new ExceptionIsEmpty("COLA VACIA");
+
+        //guardar front antes de eliminarlo
+        E copiaFront = arrCola[posFront];
+        //movemos una posición a la izquierda
+        for(int i=1; i<posBack+1;i++){
+            arrCola[i-1] = arrCola[i];
+        }
+        //el ultimo valor se ha duplicado, tonces lo borramos
+        arrCola[posBack]=null;
+        posBack--;  //el indice de la última posición resta 1
+        return copiaFront;
     }
     //devuelve el primer elemento de la cola
     public E front() throws ExceptionIsEmpty{
@@ -70,6 +76,7 @@ public class QueueArray<E> {
         return false;
     }
     //otros métodos
+    //método que cuenta elementos de la cola, NO NULL
     public int tamañoCola(){
         int conta = 0;
         for(E e : arrCola){
@@ -88,5 +95,14 @@ public class QueueArray<E> {
         s.append("]");
         return s.toString();
     }
-
 }
+
+//mover una posición a la izquierda
+        /*/
+        //si ya hay elementos en la cola
+        for(int i=arrCola.length-2; i>=0;i--){
+            arrCola[i+1] = arrCola[i];
+            if(i==0){
+                arrCola[i] = x;
+            }
+        }*/
