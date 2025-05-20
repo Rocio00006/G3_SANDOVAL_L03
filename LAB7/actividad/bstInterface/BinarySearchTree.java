@@ -7,6 +7,6 @@ public interface BinarySearchTree<E> {
     void delete(E data) throws ExceptionIsEmpty, ItemNotFoundException;        
     boolean search(E data);       
     boolean isEmpty();            
-    void destroy() throws ExceptionIsEmpty;              
+    void destroyNodes() throws ExceptionIsEmpty;              
     String toString();  
 }

@@ -1,9 +1,10 @@
 package LAB7.actividad;
 
 import LAB7.actividad.Exceptions.ItemDuplicatedException;
+import LAB7.actividad.Exceptions.ItemNotFoundException;
 
 public class Prueba {
-    public static void main(String[] args) throws ItemDuplicatedException {
+    public static void main(String[] args) throws ItemDuplicatedException, ItemNotFoundException {
         LinkedBST<Integer> bst = new LinkedBST<>();
 
         bst.insert(50);
@@ -17,11 +18,19 @@ public class Prueba {
         System.out.println("Recorrido InOrder:");
         bst.inOrder(); 
 
-        System.out.println("Recorrido PreOrder:");
+        /*System.out.println("Recorrido PreOrder:");
         bst.preOrder();
 
         System.out.println("Recorrido PostOrder:");
-        bst.postOrder();
+        bst.postOrder();*/
         
+
+        //Prueba de findMinNode desde la raíz
+        Integer min = bst.getMinFrom(bst.getRoot());
+        System.out.println("Valor mínimo en el árbol: " + min);
+
+        //Prueba de findMaxNode desde la raíz
+        Integer max = bst.getMaxFrom(bst.getRoot());
+        System.out.println("Valor máximo en el árbol: " + max);
     }
 }

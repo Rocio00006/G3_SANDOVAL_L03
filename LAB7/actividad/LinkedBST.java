@@ -1,5 +1,8 @@
 package LAB7.actividad;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import LAB7.actividad.Exceptions.ExceptionIsEmpty;
 import LAB7.actividad.Exceptions.ItemDuplicatedException;
 import LAB7.actividad.Exceptions.ItemNotFoundException;
@@ -121,12 +124,84 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     }
 
     @Override
-    public void destroy() throws ExceptionIsEmpty {
+    public void destroyNodes() throws ExceptionIsEmpty {
         if (isEmpty()) {
-            throw new ExceptionIsEmpty("El árbol ya está vacío.");
+            throw new ExceptionIsEmpty("árbol vacío");
         }
         root = null;
     }
+    //método que cuenta todos los nodos padres y hojas
+    public int countAllNodes(){
+        int cantNodos;
+        cantNodos = countAllNodesRec(root);
+        return cantNodos;
+    }
+    public int countAllNodesRec(Node<E> nodo){
+        //caso base que el nodo sea null
+        if(nodo==null)
+            return 0;
+        //el nodo raíz existe, ya va un nodo
+        //faltan los nodos de la izquierda y dereda
+        int cantIzq = countAllNodesRec(nodo.left);
+        int cantDer = countAllNodesRec(nodo.right);
+        //el nodo raiz es 1
+        return 1 + cantIzq + cantDer;
+    }
+
+    //método que cuenta los nodos excepto las hojas
+    public int countNodes(){
+        int nodosConHijos;
+        nodosConHijos = countNodesRec(root);
+        return nodosConHijos;
+    }
+    public int countNodesRec(Node<E> nodo){
+        //caso base 
+        //que la izq y der del nodo sea null o que sea null
+        if((nodo.left ==null && nodo.right==null) || nodo==null)
+            return 0;
+        //raiz es 1 nodod, faltan nodos de la izquierda y dereda
+        int cantIzq = countNodesRec(nodo.left);
+        int cantDer = countNodesRec(nodo.right);
+        return 1+cantIzq+cantDer;
+    }
+
+    //metodo que calcula la altura de un nodo determinado x
+    public int height(E x){
+        Node<E> subRaiz = root;
+
+    //Primero buscamos el nodo o subRaiz que tiene x
+    while (subRaiz != null) {
+        int cmp = x.compareTo(subRaiz.data);
+        if (cmp == 0) 
+            break;
+        //si la comparacion es menor va a la izquieda
+        else if (cmp < 0)
+            subRaiz = subRaiz.left;
+        //si no es menor, es mayor va a la derecha
+        else subRaiz = subRaiz.right;
+    }
+
+    //si la raiz q buscamos es null, altura será -1
+    if (subRaiz == null) 
+        return -1;
+
+    // Medir altura de forma iterativa usando una cola
+    Queue<Node<E>> queue = new LinkedList<>();
+    queue.add(subRaiz);
+    int height = -1;
+
+    while (!queue.isEmpty()) {
+        int levelSize = queue.size();
+        height++;
+        for (int i = 0; i < levelSize; i++) {
+            Node<E> current = queue.poll();
+            if (current.left != null) queue.add(current.left);
+            if (current.right != null) queue.add(current.right);
+        }
+    }
+
+    return height;
+}
 
     @Override
     public String toString() {
@@ -182,6 +257,53 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
             postOrderRecursive(node.right); //Recorre el subárbol derecho
             System.out.print(node.data + " "); //Visita el nodo actual
         }
+    }
+
+    //acctividad 10
+    //método para encontrar el menor valor de un subarbol
+    private Node<E> findMinNode(Node<E> node) throws ItemNotFoundException {
+        if (node == null) {
+            throw new ItemNotFoundException("Subárbol vacío");
+        }
+        Node<E> current = node;
+        while (current.left != null) {
+            current = current.left;
+        }
+        if (!search(current.data)) {
+            throw new ItemNotFoundException("El valor mínimo no se encuentra en el árbol");
+        }
+        return current;
+    }
+
+    //método para encontar el mayor valor de un subarbol
+    private Node<E> findMaxNode(Node<E> node) throws ItemNotFoundException {
+        if (node == null) {
+            throw new ItemNotFoundException("Subárbol vacío");
+        }
+
+        Node<E> current = node;
+        while (current.right != null) {
+            current = current.right;
+        }
+
+        if (!search(current.data)) {
+            throw new ItemNotFoundException("El valor máximo no se encuentra en el árbol");
+        }
+        return current;
+    }
+
+    // como son finMinNode y finMaxNode son privados
+    // crearemos unos metodos public que retornen su valor
+    public E getMinFrom(Node<E> node) throws ItemNotFoundException {
+        return findMinNode(node).data;
+    }
+
+    public E getMaxFrom(Node<E> node) throws ItemNotFoundException {
+        return findMaxNode(node).data;
+    }
+
+    public Node<E> getRoot() {
+        return root;
     }
 
 }
