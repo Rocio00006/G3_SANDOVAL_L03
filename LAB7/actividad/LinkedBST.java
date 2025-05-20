@@ -165,43 +165,86 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return 1+cantIzq+cantDer;
     }
 
-    //metodo que calcula la altura de un nodo determinado x
-    public int height(E x){
+    // metodo que calcula la altura de un nodo determinado x
+    public int height(E x) {
         Node<E> subRaiz = root;
 
-    //Primero buscamos el nodo o subRaiz que tiene x
-    while (subRaiz != null) {
-        int cmp = x.compareTo(subRaiz.data);
-        if (cmp == 0) 
-            break;
-        //si la comparacion es menor va a la izquieda
-        else if (cmp < 0)
-            subRaiz = subRaiz.left;
-        //si no es menor, es mayor va a la derecha
-        else subRaiz = subRaiz.right;
-    }
-
-    //si la raiz q buscamos es null, altura será -1
-    if (subRaiz == null) 
-        return -1;
-
-    // Medir altura de forma iterativa usando una cola
-    Queue<Node<E>> queue = new LinkedList<>();
-    queue.add(subRaiz);
-    int height = -1;
-
-    while (!queue.isEmpty()) {
-        int levelSize = queue.size();
-        height++;
-        for (int i = 0; i < levelSize; i++) {
-            Node<E> current = queue.poll();
-            if (current.left != null) queue.add(current.left);
-            if (current.right != null) queue.add(current.right);
+        // Primero buscamos el nodo o subRaiz que tiene x
+        while (subRaiz != null) {
+            int cmp = x.compareTo(subRaiz.data);
+            if (cmp == 0)
+                break;
+            // si la comparacion es menor va a la izquieda
+            else if (cmp < 0)
+                subRaiz = subRaiz.left;
+            // si no es menor, es mayor va a la derecha
+            else
+                subRaiz = subRaiz.right;
         }
-    }
 
-    return height;
-}
+        // si la raiz q buscamos es null, altura será -1
+        if (subRaiz == null)
+            return -1;
+
+        // medir altura de forma iterativa usando una cola
+        Queue<Node<E>> queue = new LinkedList<>();
+
+        // añadimos el subarbol representado por subraiz, a la cola
+        queue.add(subRaiz);
+        // altura empieza en -1
+        int height = -1;
+        // mientras que la cola no esté vacía
+        while (!queue.isEmpty()) {
+            // guardamos el numero de nodos por nivel
+            int nodosPorNivel = queue.size();
+            height++; // aumenta 1 porque pasamos al siguiente nivvel
+            for (int i = 0; i < nodosPorNivel; i++) {
+                // quitamos el nodo actual y lo guardamos en current
+                Node<E> current = queue.poll();
+                if (current.left != null)
+                    queue.add(current.left);
+                if (current.right != null)
+                    queue.add(current.right);
+            }
+        }
+        return height;
+    }
+    //retorna la cantidad de nodos de un nivel dado
+    public int amplitude(int nivel) {
+        //caso base si el nivel es menor que 0, no hya nodos hijos
+        if (nivel < 0 || root == null)
+            return 0;
+        //creamos una nueva cola
+        Queue<Node<E>> queue = new LinkedList<>();
+        queue.add(root);    //comenzamos por el nivel 0 o sea la raíz
+        int currentLevel = 0;
+
+        //mientras que haya nodos en la cola
+        while (!queue.isEmpty()) {
+            //levelsize inica cuantos nodos hay en el nivel actual
+            int levelSize = queue.size();
+
+            //cuando llegamos al nivel que buscamos
+            if (currentLevel == nivel) {
+                //devolvemos la cantidad de nodos de ese nivel
+                return levelSize;
+            }
+
+            //ahora recorremos cada nodo de ese nivel
+            for (int i = 0; i < levelSize; i++) {
+                Node<E> current = queue.poll(); //1° quitarlo de cola
+                //si hay hijos agregar a la cola, para que sea procesados
+                //si tiene hijos izquierdo, lo agregamos a la cola
+                if (current.left != null)
+                    queue.add(current.left);
+                //si tiene hijos en la drecha, agregar a la cola
+                if (current.right != null)
+                    queue.add(current.right);
+            }
+            currentLevel++; //incrementamos el nivel
+        }
+        return 0;
+    }
 
     @Override
     public String toString() {
@@ -306,4 +349,76 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return root;
     }
 
+    //EJERCICIO 2
+    //área de un arbol = numNodoHijos * Altura
+    public int areaBST() {
+        if (isEmpty())
+            return 0;
+
+        int numHojas = 0;
+        int altura = -1;
+
+        //usamos una cola
+        Queue<Node<E>> queue = new LinkedList<>();
+        queue.add(root);
+
+        //mientras que la cola no esté vacía
+        while (!queue.isEmpty()) {
+            //cantidad de nodos por nivel
+            int levelSize = queue.size();
+            altura++;
+
+            for (int i = 0; i < levelSize; i++) {
+                Node<E> current = queue.poll();
+
+                //contamos solo si es hoja
+                if (current.left == null && current.right == null) {
+                    numHojas++;
+                }
+
+                if (current.left != null)
+                    queue.add(current.left);
+                if (current.right != null)
+                    queue.add(current.right);
+            }
+        }
+        return numHojas * altura;
+    }
+
+    //ejer 2.B
+    //método para dibujar el árbol usando toString
+    public void drawBST() {
+        drawBSTRecursive(root, 0);
+    }
+    private void drawBSTRecursive(Node<E> node, int profundi) {
+        if (node == null)
+            return;
+        drawBSTRecursive(node.right, profundi + 1); //primero derecha para que quede arriba
+        //añadir espacios según la profundidad
+        for (int i = 0; i < profundi; i++) {
+            System.out.print("    ");
+        }
+        System.out.println(node.data);
+        drawBSTRecursive(node.left, profundi + 1); //luego el zquierdo
+    }
+
+    // EJERCICIO3
+    public void parenthesize() {
+        parenthesizeRecursive(root, 0);
+    }
+
+    private void parenthesizeRecursive(Node<E> node, int depth) {
+        if (node == null)
+            return;
+
+        // Imprimir sangría
+        for (int i = 0; i < depth; i++) {
+            System.out.print("  "); // dos espacios por nivel
+        }
+        System.out.println(node.data); // imprimir dato
+
+        // Llamar recursivamente a hijos
+        parenthesizeRecursive(node.left, depth + 1);
+        parenthesizeRecursive(node.right, depth + 1);
+    }
 }
