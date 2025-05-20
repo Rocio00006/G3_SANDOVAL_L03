@@ -1,61 +1,75 @@
 package LAB7.actividad;
 
-import LAB7.actividad.Exceptions.*;
+import LAB7.actividad.Exceptions.ExceptionIsEmpty;
+import LAB7.actividad.Exceptions.ItemDuplicatedException;
+import LAB7.actividad.Exceptions.ItemNotFoundException;
 import LAB7.actividad.bstInterface.BinarySearchTree;
 
 public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
 
-    private Node<E> root;
+    private Node<E> root; //nodo raiz tiene las referecias resto
 
     public LinkedBST() {
-        this.root = null;
+        this.root = null;   //un arbol vacío empieza con null  
     }
 
     @Override
-    public boolean isEmpty() {
-        return root == null;
+    public void insert(E data) throws ItemDuplicatedException {
+        //a root se le asigna el resultado del método insertRec
+        root = insertRec(root, data); //usamos recursividad
     }
 
-    @Override
-    public void insert(E data) throws ItemDuplicated {
-        root = insertRecursive(root, data);
-    }
-
-    private Node<E> insertRecursive(Node<E> node, E data) throws ItemDuplicated {
-        if (node == null) {
-            return new Node<>(data);
+    //metodo recursivo que recibe el nodo actual y el valor a insertar
+    private Node<E> insertRec(Node<E> nodoAct, E data) throws ItemDuplicatedException {
+        //c1 caso base el nodo es null, se inserta el un valor
+        if (nodoAct == null) { 
+            Node<E> nuevo = new Node<E>(data);
+            return nuevo;
         }
-
-        int cmp = data.compareTo(node.data);
+        //comparamos si el valor a insertar es > < = que el nodo actual
+        int cmp = data.compareTo(nodoAct.data); //resultado de la comparación
 
         if (cmp < 0) {
-            node.left = insertRecursive(node.left, data);
+            //si es menor, ahora trabajmos solo con la izquierda
+            nodoAct.left = insertRec(nodoAct.left, data);
         } else if (cmp > 0) {
-            node.right = insertRecursive(node.right, data);
+            //si es mayor trabajamos solo con la derecha
+            nodoAct.right = insertRec(nodoAct.right, data);
         } else {
-            throw new ItemDuplicated("Elemento duplicado: " + data);
+            //si es igual, significa que ya existe ese elemento
+            throw new ItemDuplicatedException("Elemento duplicado: " + data);
         }
-
-        return node;
+        return nodoAct;
     }
 
     @Override
     public boolean search(E data) {
         return searchRecursive(root, data);
     }
-
     private boolean searchRecursive(Node<E> node, E data) {
-        if (node == null) return false;
+        //si root es null, el árbol está vaio
+        if (node == null) 
+            return false;
 
         int cmp = data.compareTo(node.data);
 
-        if (cmp == 0) return true;
-        else if (cmp < 0) return searchRecursive(node.left, data);
-        else return searchRecursive(node.right, data);
+        //si la comparación es 0, hay coincidencia
+        if (cmp == 0) 
+            return true;
+        //si es menor, buscamos en la izquierda
+        else if (cmp < 0) 
+            return searchRecursive(node.left, data);
+        //si es mayor buscamos en la derecha
+        else 
+            return searchRecursive(node.right, data);
     }
 
     @Override
-    public void delete(E data) {
+    public boolean isEmpty() {
+        return root == null;    //el arbol esta vacío si no hay raíz
+    }
+    @Override
+    public void delete(E data) throws ExceptionIsEmpty, ItemNotFoundException {
         if (isEmpty()) {
             throw new ExceptionIsEmpty("El árbol está vacío.");
         }
@@ -74,9 +88,11 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
 
         if (cmp < 0) {
             node.left = deleteRecursive(node.left, data);
-        } else if (cmp > 0) {
+        } 
+        else if (cmp > 0) {
             node.right = deleteRecursive(node.right, data);
-        } else {
+        } 
+        else {
             // Caso 1: sin hijos
             if (node.left == null && node.right == null) {
                 return null;
@@ -94,7 +110,6 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
                 node.right = deleteRecursive(node.right, min);
             }
         }
-
         return node;
     }
 
@@ -106,11 +121,11 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     }
 
     @Override
-    public void destroy() {
+    public void destroy() throws ExceptionIsEmpty {
         if (isEmpty()) {
             throw new ExceptionIsEmpty("El árbol ya está vacío.");
         }
-        root = null; // El garbage collector de Java libera la memoria.
+        root = null;
     }
 
     @Override

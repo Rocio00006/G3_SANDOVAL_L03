@@ -1,12 +1,12 @@
 package LAB7.actividad.bstInterface;
 
-import LAB7.actividad.Exceptions.ExceptionIsEmpty;
+import LAB7.actividad.Exceptions.*;
 
 public interface BinarySearchTree<E> {
-    void insert(E data);          //Inserta un elemento en el BST
-    void delete(E data);          //Elimina un elemento del BST
-    boolean search(E data);       //Verifica si un elemento está en el BST
-    boolean isEmpty();            //Verifica si el árbol está vacío
-    void destroy() throws ExceptionIsEmpty;               //Elimina todos los nodos del árbol
+    void insert(E data) throws ItemDuplicatedException;          
+    void delete(E data) throws ExceptionIsEmpty, ItemNotFoundException;        
+    boolean search(E data);       
+    boolean isEmpty();            
+    void destroy() throws ExceptionIsEmpty;              
     String toString();  
 }
