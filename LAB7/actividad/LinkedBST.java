@@ -142,4 +142,46 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
             toStringInOrder(node.right, sb);
         }
     }
+    //RECORRIDO INRODER IZQ - RAIZ -DER
+    public void inOrder() {
+        inOrderRecursive(root);
+        System.out.println(); // Salto de línea al final
+    }
+
+    private void inOrderRecursive(Node<E> node) {
+        if (node != null) {
+            inOrderRecursive(node.left);         //Recorre el subárbol izquierdo
+            System.out.print(node.data + " ");   //Visita el nodo actual
+            inOrderRecursive(node.right);        //Recorre el subárbol derecho
+        }
+    }
+
+    // RECORRIDO PREORDER RAIZ - IZQ - DER
+    public void preOrder() {
+        preOrderRecursive(root);
+        System.out.println(); // Salto de línea al final
+    }
+
+    private void preOrderRecursive(Node<E> node) {
+        if (node != null) {
+            System.out.print(node.data + " "); // Visita el nodo actual
+            preOrderRecursive(node.left); // Recorre el subárbol izquierdo
+            preOrderRecursive(node.right); // Recorre el subárbol derecho
+        }
+    }
+
+    // RECORRIDO POSTORDER IZQ DER RAIZ
+    public void postOrder() {
+        postOrderRecursive(root);
+        System.out.println(); // Salto de línea al final
+    }
+
+    private void postOrderRecursive(Node<E> node) {
+        if (node != null) {
+            postOrderRecursive(node.left); //Recorre el subárbol izquierdo
+            postOrderRecursive(node.right); //Recorre el subárbol derecho
+            System.out.print(node.data + " "); //Visita el nodo actual
+        }
+    }
+
 }
