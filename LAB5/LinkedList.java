@@ -131,15 +131,14 @@ public class LinkedList<E>  {
             System.out.println("La posición no existe");
             return;
         } 
-        else{
-            Node<E> aux = lista;
-            while (aux !=null) {
-                if(aux.equals(posicion)){
-                    nuevo.setNext(aux.getNext());
-                }else{
-                    aux = aux.getNext();
-                }
+        Node<E> aux = lista;
+        while (aux != null) {
+            if (aux.equals(posicion)) {
+                nuevo.setNext(aux.getNext()); //nuevo apunta a donde apunta aux
+                aux.setNext(nuevo); //ahora aux apunta al nuevo nodo
+                return; //termina while
             }
+            aux = aux.getNext();
         }
     }
 
@@ -152,7 +151,7 @@ public class LinkedList<E>  {
         Node<E> sigu= null;     //guard tempo nodo siguiente
         while(actu!=null){
             sigu = actu.getNext();  //guarda el siguie nodo
-            //el sigu de act apunta al anterior
+            //queremos q el sigu de act apunte al anterior
             actu.setNext(ante);//invierte
             ante = actu;    //avanza al anterior
             actu = sigu;    //avanza la actual

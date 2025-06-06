@@ -38,13 +38,13 @@ public class Ejercicio34 {
         lista.print();
 
         Node<String> nodos = lista.getFirstNode();  //nodo que se enviará
-        /*String val = "Marcos";  //creamos el valor T a enviar
+        String val = "Marcos";  //creamos el valor T a enviar
         
-        System.out.println("PROBAMOS INSERTAR AL FINAL");
+        System.out.println("\nPROBAMOS INSERTAR AL FINAL");
         insertarAlFinal(nodos, val);
         System.out.println("LISTA QUEDA ASÍ: ");
-        mostrar(nodos);*/
+        mostrar(nodos);
 
-        System.out.println("CUÁNTOS NODOS HAY? " + contarNodos(nodos));
+        //System.out.println("CUÁNTOS NODOS HAY? " + contarNodos(nodos));
     }
 }
