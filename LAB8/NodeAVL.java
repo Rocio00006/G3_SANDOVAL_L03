@@ -9,7 +9,10 @@ public class NodeAVL<E> {
 
     public NodeAVL(E data) {
         //this.bf = 0; //inicializa en 0
-        this.height = -1;
+        this.data = data;    // Esta línea es crucial
+        this.left = null;
+        this.right = null;
+        this.height = 1;
 
     }
     public E getData() {
