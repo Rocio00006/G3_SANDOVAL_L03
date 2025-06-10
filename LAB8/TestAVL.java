@@ -86,9 +86,10 @@ public class TestAVL {
 
         // ====== CASO 8: Segunda RDL ======
         System.out.println("--- CASO 8: Segunda RDL ---");
-        System.out.println("Insertando: 45");
+        System.out.println("Insertando: 45, 43");
         avl.insert(45);
-        System.out.println("Después de insertar 45: Se produce desequilibrio Right-Left");
+        avl.insert(45);
+        System.out.println("Después de insertar 43: Se produce desequilibrio Right-Left");
         System.out.println("ROTACIÓN RDL aplicada: RSR + RSL");
         System.out.println("Rebalanceo final en subárbol derecho\n");
     }
