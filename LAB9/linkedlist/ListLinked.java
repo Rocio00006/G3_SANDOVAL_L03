@@ -163,4 +163,17 @@ public class ListLinked<T> {
         sb.append("]");
         return sb.toString();
     }
+    public void insertLast(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node<T> current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+        size++;
+    }
 }
