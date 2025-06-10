@@ -158,21 +158,6 @@ public class GraphLink<T> {
         System.out.println();
     }
 
-    //método para obtener vértices adyacentes
-    private List<Vertex<T>> getAdjacentVertices(Vertex<T> vertex) {
-        List<Vertex<T>> adjacents = new ArrayList<>();
-
-        for (int i = 0; i < edges.size(); i++) {
-            Edge<T> edge = edges.get(i);
-            if (edge.getOrigi().equals(vertex)) {
-                adjacents.add(edge.getDesti());
-            } else if (edge.getDesti().equals(vertex)) {
-                adjacents.add(edge.getOrigi());
-            }
-        }
-        return adjacents;
-    }
-
     //Ejercicio 1
     //a
     //método para obtener recorrido por anchura BFS
@@ -259,4 +244,169 @@ public class GraphLink<T> {
         }
         return path;
     }
+
+    // ejercicio 2
+    // método para insertar una arista con peso
+    public void insertEdgeWeight(T data1, T data2, double weight) {
+        Vertex<T> vertex1 = findVertex(data1);
+        Vertex<T> vertex2 = findVertex(data2);
+
+        if (vertex1 != null && vertex2 != null) {
+            if (!searchEdge(data1, data2)) {
+                Edge<T> newEdge = new Edge<>(vertex1, vertex2, weight);
+                edges.insertLast(newEdge);
+            }
+        }
+    }
+
+    // método para encontrar el camino más corto
+    public ArrayList<T> shortPath(T startData, T endData) {
+        Vertex<T> startVertex = findVertex(startData);
+        Vertex<T> endVertex = findVertex(endData);
+        
+        if (startVertex == null || endVertex == null) {
+            return new ArrayList<>();
+        }
+        
+        Map<Vertex<T>, Double> distances = new HashMap<>();
+        Map<Vertex<T>, Vertex<T>> previous = new HashMap<>();
+        Set<Vertex<T>> unvisited = new HashSet<>();
+        
+        // Inicializar distancias
+        for (int i = 0; i < vertices.size(); i++) {
+            Vertex<T> vertex = vertices.get(i);
+            distances.put(vertex, Double.POSITIVE_INFINITY);
+            unvisited.add(vertex);
+        }
+        distances.put(startVertex, 0.0);
+        
+        while (!unvisited.isEmpty()) {
+            // Encontrar vértice no visitado con menor distancia
+            Vertex<T> current = null;
+            double minDistance = Double.POSITIVE_INFINITY;
+            
+            for (Vertex<T> vertex : unvisited) {
+                if (distances.get(vertex) < minDistance) {
+                    minDistance = distances.get(vertex);
+                    current = vertex;
+                }
+            }
+            if (current == null || distances.get(current) == Double.POSITIVE_INFINITY) {
+                break;
+            }  
+            unvisited.remove(current);
+            
+            if (current.equals(endVertex)) {
+                break;
+            }
+            // Actualizar distancias de vértices adyacentes
+            List<Edge<T>> adjacentEdges = getAdjacentEdges(current);
+            for (Edge<T> edge : adjacentEdges) {
+                Vertex<T> neighbor = edge.getOrigi().equals(current) ? edge.getDesti() : edge.getOrigi();
+                if (unvisited.contains(neighbor)) {
+                    double newDistance = distances.get(current) + edge.getWeight();
+                    if (newDistance < distances.get(neighbor)) {
+                        distances.put(neighbor, newDistance);
+                        previous.put(neighbor, current);
+                    }
+                }
+            }
+        }
+         // Reconstruir camino
+        ArrayList<T> path = new ArrayList<>();
+        Vertex<T> current = endVertex;
+        
+        if (previous.get(current) != null || current.equals(startVertex)) {
+            while (current != null) {
+                path.add(0, current.getData());
+                current = previous.get(current);
+            }
+        }
+        return path;
+    }
+
+    //método para ver si es conexo
+    public boolean isConexo() {
+        if (vertices.size() == 0) {
+            return true;
+        }
+        
+        Set<Vertex<T>> visited = new HashSet<>();
+        Queue<Vertex<T>> queue = new LinkedList<>();
+        
+        Vertex<T> startVertex = vertices.get(0);
+        queue.offer(startVertex);
+        visited.add(startVertex);
+        
+        while (!queue.isEmpty()) {
+            Vertex<T> current = queue.poll();
+            
+            List<Vertex<T>> adjacents = getAdjacentVertices(current);
+            for (Vertex<T> adjacent : adjacents) {
+                if (!visited.contains(adjacent)) {
+                    visited.add(adjacent);
+                    queue.offer(adjacent);
+                }
+            }
+        }
+        
+        return visited.size() == vertices.size();
+    }
+
+    //método del algoritmos dikstra que retornorá un stack
+    public Stack<T> dijkstra(T startData, T endData) {
+        ArrayList<T> path = shortPath(startData, endData);
+        Stack<T> result = new Stack<>();
+        
+        //Invertir el camino para que el stack tenga el orden correcto
+        for (int i = path.size() - 1; i >= 0; i--) {
+            result.push(path.get(i));
+        }
+        return result;
+    }
+
+        //método para obtener vértices adyacentes
+    private List<Vertex<T>> getAdjacentVertices(Vertex<T> vertex) {
+        List<Vertex<T>> adjacents = new ArrayList<>();
+        for (int i = 0; i < edges.size(); i++) {
+            Edge<T> edge = edges.get(i);
+            if (edge.getOrigi().equals(vertex)) {
+                adjacents.add(edge.getDesti());
+            } else if (edge.getDesti().equals(vertex)) {
+                adjacents.add(edge.getOrigi());
+            }
+        }
+        return adjacents;
+    }
+
+    // Método auxiliar para obtener aristas adyacentes a un vértice
+    private List<Edge<T>> getAdjacentEdges(Vertex<T> vertex) {
+        List<Edge<T>> adjacentEdges = new ArrayList<>();
+        for (int i = 0; i < edges.size(); i++) {
+            Edge<T> edge = edges.get(i);
+            if (edge.getOrigi().equals(vertex) || edge.getDesti().equals(vertex)) {
+                adjacentEdges.add(edge);
+            }
+        }
+        return adjacentEdges;
+    }
+
+    // Métodos adicionales para mostrar el grafo
+    public void printGraph() {
+        System.out.println("Vértices del grafo:");
+        for (int i = 0; i < vertices.size(); i++) {
+            System.out.print(vertices.get(i).getData() + " ");
+        }
+        System.out.println();
+        
+        System.out.println("Aristas del grafo:");
+        for (int i = 0; i < edges.size(); i++) {
+            Edge<T> edge = edges.get(i);
+            System.out.println(edge.getOrigi().getData() + " - " + 
+                             edge.getDesti().getData() + " (peso: " + edge.getWeight() + ")");
+        }
+    }
+
 }
+
+
