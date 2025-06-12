@@ -58,29 +58,73 @@ public class GraphLink<E> {
         return false;
     }
 
-    // Eliminar vértice
+    //método para eliminar un vértice
     public void removeVertex(E data) {
         Vertex<E> v = findVertex(data);
         if (v != null) {
-            // Primero eliminamos las aristas que apuntan a este vértice
+            //primero eliminamos las aristas que apuntan a este vértice
             ListLinked.Node<Vertex<E>> auxV = listVertex.getHead();
             while (auxV != null) {
                 Vertex<E> temp = auxV.data;
                 temp.listAdj.remove(new Edge<>(v));
                 auxV = auxV.next;
             }
-            // Finalmente eliminamos el vértice
+            //finalmente eliminamos el vértice
             listVertex.remove(v);
         }
     }
 
-    // Eliminar arista
+    //método para eliminar una arista
     public void removeEdge(E verOri, E verDes) {
         Vertex<E> vOri = findVertex(verOri);
         Vertex<E> vDes = findVertex(verDes);
         if (vOri != null && vDes != null) {
             vOri.listAdj.remove(new Edge<>(vDes));
         }
+    }
+
+    //método para el recorrido en profundidad DFS desde v
+    public void dfs(E v) {
+        Vertex<E> vertexIncio = findVertex(v);
+        if (vertexIncio == null) {
+            System.out.println("El vértice " + v + " no existe en el grafo");
+            return;
+        }
+        //lista para marcar los vértices visitados
+        ListLinked<Vertex<E>> visitados = new ListLinked<>();
+        
+        System.out.print("DFS desde " + v + ": ");
+        dfsRecursive(vertexIncio, visitados);
+        System.out.println(); // Nueva línea al final
+    }
+    private void dfsRecursive(Vertex<E> vertex, ListLinked<Vertex<E>> visitados) {
+        // Marcar el vértice actual como visitado
+        visitados.add(vertex);
+        
+        // Mostrar el vértice visitado
+        System.out.print(vertex.getData() + " ");
+        
+        // Recorrer todos los vértices adyacentes
+        ListLinked.Node<Edge<E>> aux = vertex.listAdj.getHead();
+        while (aux != null) {
+            Vertex<E> adjacent = aux.data.getRefDest();
+            
+            //Si el vértice adyacente no ha sido visitado, visitarlo recursivamente
+            if (!isvisitados(adjacent, visitados)) {
+                dfsRecursive(adjacent, visitados);
+            }
+            aux = aux.next;
+        }
+    }
+    private boolean isvisitados(Vertex<E> vertex, ListLinked<Vertex<E>> visitados) {
+        ListLinked.Node<Vertex<E>> aux = visitados.getHead();
+        while (aux != null) {
+            if (aux.data.equals(vertex)) {
+                return true;
+            }
+            aux = aux.next;
+        }
+        return false;
     }
 
     @Override
