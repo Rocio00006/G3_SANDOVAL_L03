@@ -1,8 +1,10 @@
-package LAB9.graph5;
+package LAB9.graph7;
+
+//import LAB9.linkedlist.ListLinked;
 
 public class Vertex<E> {
     public E data;  //vertice
-    protected ListLinked<Edge<E>> listAdj; //lista de adyacencia
+    public ListLinked<Edge<E>> listAdj; //lista de adyacencia
 
  public Vertex(E data) {
         this.data = data;

@@ -1,4 +1,4 @@
-package LAB9.graph5;
+package LAB9.graph7;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -749,203 +749,373 @@ public class GraphLink<E> {
             System.out.println("]");
         }
     }
+    //ejercicio 7
+    // ================ MÉTODOS PARA GRAFOS DIRIGIDOS ================
 
-    //EJERCICIO 9
-
-
-
-
-
-
-
-
-
-
-
-    // ejercicio 9
-    // Métodos adicionales para la clase GraphLink<E>
-    // Agregar estos métodos a la clase GraphLink existente
-
-    // a) Método para verificar si dos grafos son isomorfos
-    public boolean esIsomorfo(GraphLink<E> otroGrafo) {
-        // Verificar que tengan el mismo número de vértices
-        if (this.contarVertices() != otroGrafo.contarVertices()) {
-            return false;
+    // a) Grado de un nodo en grafo dirigido
+    // Incluye grado de entrada, grado de salida y grado total
+    public void mostrarGradosNodoDirigido(E data) {
+        Vertex<E> vertex = findVertex(data);
+        if (vertex == null) {
+            throw new IllegalArgumentException("El vértice " + data + " no existe en el grafo");
         }
 
-        // Verificar que tengan el mismo número de aristas
-        if (this.contarAristas() != otroGrafo.contarAristas()) {
-            return false;
-        }
+        int gradoSalida = gradoSalidaDirigido(data);
+        int gradoEntrada = gradoEntradaDirigido(data);
+        int gradoTotal = gradoSalida + gradoEntrada;
 
-        // Crear secuencias de grados para ambos grafos
-        ArrayList<Integer> gradosThis = this.obtenerSecuenciaGrados();
-        ArrayList<Integer> gradosOtro = otroGrafo.obtenerSecuenciaGrados();
-
-        // Ordenar las secuencias de grados
-        gradosThis.sort(Integer::compareTo);
-        gradosOtro.sort(Integer::compareTo);
-
-        // Si las secuencias de grados son diferentes, no son isomorfos
-        return gradosThis.equals(gradosOtro);
+        System.out.println("=== GRADOS DEL NODO " + data + " (GRAFO DIRIGIDO) ===");
+        System.out.println("Grado de salida (out-degree): " + gradoSalida);
+        System.out.println("Grado de entrada (in-degree): " + gradoEntrada);
+        System.out.println("Grado total: " + gradoTotal);
     }
 
-    // Método auxiliar para contar aristas
-    private int contarAristas() {
-        int count = 0;
-        Set<String> aristasContadas = new HashSet<>();
+    // Método auxiliar: calcular grado de salida
+    public int gradoSalidaDirigido(E data) {
+        Vertex<E> vertex = findVertex(data);
+        if (vertex == null) {
+            throw new IllegalArgumentException("El vértice " + data + " no existe en el grafo");
+        }
 
-        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        int gradoSalida = 0;
+        ListLinked.Node<Edge<E>> aux = vertex.listAdj.getHead();
         while (aux != null) {
-            ListLinked.Node<Edge<E>> edge = aux.data.listAdj.getHead();
-            while (edge != null) {
-                String arista = aux.data.getData() + "-" + edge.data.getRefDest().getData();
-                String aristaInversa = edge.data.getRefDest().getData() + "-" + aux.data.getData();
-
-                // Para grafos no dirigidos, evitar contar la misma arista dos veces
-                if (!aristasContadas.contains(aristaInversa)) {
-                    aristasContadas.add(arista);
-                    count++;
-                }
-                edge = edge.next;
-            }
+            gradoSalida++;
             aux = aux.next;
         }
-        return count;
+        return gradoSalida;
     }
 
-    // Método auxiliar para obtener la secuencia de grados
-    private ArrayList<Integer> obtenerSecuenciaGrados() {
-        ArrayList<Integer> grados = new ArrayList<>();
-        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
-        while (aux != null) {
-            grados.add(gradoNodo(aux.data.getData()));
-            aux = aux.next;
-        }
-        return grados;
-    }
-
-    // b) Método para verificar si un grafo es plano
-    public boolean esPlano() {
-        int v = contarVertices();
-        int e = contarAristas();
-
-        // Casos especiales
-        if (v <= 4) {
-            return true; // Grafos con 4 o menos vértices son siempre planares
+    // Método auxiliar: calcular grado de entrada
+    public int gradoEntradaDirigido(E data) {
+        Vertex<E> vertex = findVertex(data);
+        if (vertex == null) {
+            throw new IllegalArgumentException("El vértice " + data + " no existe en el grafo");
         }
 
-        // Verificar la desigualdad de Euler para grafos planares
-        // Para grafos conexos planares: e ≤ 3v - 6
-        if (e > 3 * v - 6) {
-            return false;
-        }
-
-        // Para grafos sin triángulos: e ≤ 2v - 4
-        if (!tieneTRiangulos() && e > 2 * v - 4) {
-            return false;
-        }
-
-        return true; // Probable que sea planar
-    }
-
-    
-
-    // Método auxiliar para verificar si el grafo tiene triángulos
-    private boolean tieneTRiangulos() {
-        ListLinked.Node<Vertex<E>> aux1 = listVertex.getHead();
-        while (aux1 != null) {
-            ListLinked.Node<Edge<E>> edge1 = aux1.data.listAdj.getHead();
-            while (edge1 != null) {
-                ListLinked.Node<Edge<E>> edge2 = edge1.data.getRefDest().listAdj.getHead();
-                while (edge2 != null) {
-                    if (searchEdge(edge2.data.getRefDest().getData(), aux1.data.getData()) &&
-                            !edge2.data.getRefDest().equals(aux1.data)) {
-                        return true; // Encontró un triángulo
+        int gradoEntrada = 0;
+        // Recorrer todos los vértices para ver cuáles apuntan al nodo actual
+        ListLinked.Node<Vertex<E>> auxVertex = listVertex.getHead();
+        while (auxVertex != null) {
+            if (!auxVertex.data.equals(vertex)) {
+                ListLinked.Node<Edge<E>> auxEdge = auxVertex.data.listAdj.getHead();
+                while (auxEdge != null) {
+                    if (auxEdge.data.getRefDest().equals(vertex)) {
+                        gradoEntrada++;
                     }
-                    edge2 = edge2.next;
+                    auxEdge = auxEdge.next;
                 }
-                edge1 = edge1.next;
             }
-            aux1 = aux1.next;
+            auxVertex = auxVertex.next;
         }
-        return false;
+        return gradoEntrada;
     }
 
-    // c) Método para verificar si un grafo es conexo (ya implementado)
-    // El método isConexo() ya está implementado en el código original
+    // b) Verificar si es un camino dirigido (Path dirigido)
+    // Un camino dirigido tiene exactamente un nodo fuente, un nodo sumidero, y los
+    // demás con grado de entrada y salida 1
+    public boolean esCaminoDirigido() {
+        if (!isConexoDebil()) {
+            return false;
+        }
 
-    // d) Método para verificar si un grafo es auto-complementario
-    public boolean esAutoComplementario() {
-        // Crear el grafo complementario
-        GraphLink<E> complementario = crearComplementario();
+        int totalVertices = contarVertices();
+        if (totalVertices < 2) {
+            return false;
+        }
 
-        // Verificar si el grafo original es isomorfo al complementario
-        return this.esIsomorfo(complementario);
-    }
+        int nodosFuente = 0; // grado entrada = 0, grado salida = 1
+        int nodosSumidero = 0; // grado entrada = 1, grado salida = 0
+        int nodosIntermedios = 0; // grado entrada = 1, grado salida = 1
 
-    // Método auxiliar para crear el grafo complementario
-    private GraphLink<E> crearComplementario() {
-        GraphLink<E> complementario = new GraphLink<>();
-
-        // Agregar todos los vértices al grafo complementario
         ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
         while (aux != null) {
-            complementario.insertVertex(aux.data.getData());
+            E data = aux.data.getData();
+            int gradoEntrada = gradoEntradaDirigido(data);
+            int gradoSalida = gradoSalidaDirigido(data);
+
+            if (gradoEntrada == 0 && gradoSalida == 1) {
+                nodosFuente++;
+            } else if (gradoEntrada == 1 && gradoSalida == 0) {
+                nodosSumidero++;
+            } else if (gradoEntrada == 1 && gradoSalida == 1) {
+                nodosIntermedios++;
+            } else {
+                return false; // Grados incorrectos para un camino dirigido
+            }
             aux = aux.next;
         }
 
-        // Agregar aristas complementarias
+        // Debe haber exactamente 1 fuente, 1 sumidero, y el resto intermedios
+        return nodosFuente == 1 && nodosSumidero == 1 && nodosIntermedios == (totalVertices - 2);
+    }
+
+    // c) Verificar si es un ciclo dirigido
+    // Un ciclo dirigido tiene todos los nodos con grado de entrada = 1 y grado de
+    // salida = 1
+    public boolean esCicloDirigido() {
+        if (!isConexoFuerte()) {
+            return false;
+        }
+
+        int totalVertices = contarVertices();
+        if (totalVertices < 3) {
+            return false;
+        }
+
+        // Todos los nodos deben tener grado de entrada = 1 y grado de salida = 1
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            E data = aux.data.getData();
+            if (gradoEntradaDirigido(data) != 1 || gradoSalidaDirigido(data) != 1) {
+                return false;
+            }
+            aux = aux.next;
+        }
+        return true;
+    }
+
+    // d) Verificar si es una rueda dirigida
+    // Una rueda dirigida tiene un nodo central que puede llegar a todos los demás,
+    // y los nodos externos forman un ciclo dirigido
+    public boolean esRuedaDirigida() {
+        int totalVertices = contarVertices();
+        if (totalVertices < 4) {
+            return false;
+        }
+
+        if (!isConexoDebil()) {
+            return false;
+        }
+
+        // Buscar el nodo central (debe tener grado de salida = n-1)
+        Vertex<E> nodoCentral = null;
+        int candidatosCentrales = 0;
+
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            E data = aux.data.getData();
+            int gradoSalida = gradoSalidaDirigido(data);
+            int gradoEntrada = gradoEntradaDirigido(data);
+
+            // El nodo central debe poder llegar a todos los demás (grado salida = n-1)
+            // y recibir conexiones de todos los externos (grado entrada = n-1)
+            if (gradoSalida == totalVertices - 1 && gradoEntrada == totalVertices - 1) {
+                nodoCentral = aux.data;
+                candidatosCentrales++;
+            }
+            aux = aux.next;
+        }
+
+        if (candidatosCentrales != 1) {
+            return false; // Debe haber exactamente un nodo central
+        }
+
+        // Los nodos externos deben formar un ciclo dirigido
+        // Cada nodo externo debe tener: grado entrada = 2, grado salida = 2
+        // (una conexión del centro, una del ciclo externo hacia él, una hacia el
+        // centro, una hacia el siguiente en el ciclo)
+        aux = listVertex.getHead();
+        while (aux != null) {
+            if (!aux.data.equals(nodoCentral)) {
+                E data = aux.data.getData();
+                int gradoEntrada = gradoEntradaDirigido(data);
+                int gradoSalida = gradoSalidaDirigido(data);
+
+                if (gradoEntrada != 2 || gradoSalida != 2) {
+                    return false;
+                }
+
+                // Verificar que tiene conexión con el centro
+                boolean conectadoAlCentro = searchEdge(data, nodoCentral.getData());
+                boolean recibeDeCentro = searchEdge(nodoCentral.getData(), data);
+
+                if (!conectadoAlCentro || !recibeDeCentro) {
+                    return false;
+                }
+            }
+            aux = aux.next;
+        }
+
+        return true;
+    }
+
+    // e) Verificar si es completo dirigido (Torneo completo)
+    // En un grafo dirigido completo, entre cada par de vértices existe exactamente
+    // una arista
+    public boolean esCompletoDirigido() {
+        int totalVertices = contarVertices();
+        if (totalVertices < 2) {
+            return totalVertices <= 1;
+        }
+
+        // Verificar que entre cada par de vértices existe exactamente una arista
+        // dirigida
         ListLinked.Node<Vertex<E>> aux1 = listVertex.getHead();
         while (aux1 != null) {
             ListLinked.Node<Vertex<E>> aux2 = listVertex.getHead();
             while (aux2 != null) {
-                // Si no existe arista entre aux1 y aux2 en el grafo original
-                // y no son el mismo vértice, agregar arista en el complementario
-                if (!aux1.data.equals(aux2.data) &&
-                        !searchEdge(aux1.data.getData(), aux2.data.getData())) {
-                    complementario.insertEdge(aux1.data.getData(), aux2.data.getData());
+                if (!aux1.data.equals(aux2.data)) {
+                    E data1 = aux1.data.getData();
+                    E data2 = aux2.data.getData();
+
+                    boolean existe12 = searchEdge(data1, data2);
+                    boolean existe21 = searchEdge(data2, data1);
+
+                    // Debe existir exactamente una de las dos direcciones
+                    if (!(existe12 ^ existe21)) { // XOR: una y solo una debe ser verdadera
+                        return false;
+                    }
                 }
                 aux2 = aux2.next;
             }
             aux1 = aux1.next;
         }
 
-        return complementario;
+        return true;
     }
 
-    // Método para mostrar análisis completo del grafo
-    public void mostrarAnalisisCompleto() {
-        System.out.println("=== ANÁLISIS COMPLETO DEL GRAFO ===");
-        System.out.println("Número de vértices: " + contarVertices());
-        System.out.println("Número de aristas: " + contarAristas());
-        System.out.println("Es conexo: " + (isConexo() ? "SÍ" : "NO"));
-        System.out.println("Es planar: " + (esPlano() ? "SÍ" : "NO"));
-        System.out.println("Es auto-complementario: " + (esAutoComplementario() ? "SÍ" : "NO"));
+    // Métodos auxiliares para conectividad en grafos dirigidos
 
-        System.out.print("Secuencia de grados: ");
-        ArrayList<Integer> grados = obtenerSecuenciaGrados();
-        grados.sort(Integer::compareTo);
-        System.out.println(grados);
+    // Verificar conectividad débil (el grafo subyacente no dirigido es conexo)
+    public boolean isConexoDebil() {
+        if (listVertex.getHead() == null) {
+            return true;
+        }
 
-        System.out.println("Tiene triángulos: " + (tieneTRiangulos() ? "SÍ" : "NO"));
+        Set<Vertex<E>> visitados = new HashSet<>();
+        Queue<Vertex<E>> queue = new LinkedList<>();
+
+        Vertex<E> start = listVertex.getHead().data;
+        queue.offer(start);
+        visitados.add(start);
+
+        while (!queue.isEmpty()) {
+            Vertex<E> current = queue.poll();
+
+            // Explorar aristas salientes
+            ListLinked.Node<Edge<E>> adj = current.listAdj.getHead();
+            while (adj != null) {
+                Vertex<E> neighbor = adj.data.getRefDest();
+                if (!visitados.contains(neighbor)) {
+                    visitados.add(neighbor);
+                    queue.offer(neighbor);
+                }
+                adj = adj.next;
+            }
+
+            // Explorar aristas entrantes (para conectividad débil)
+            ListLinked.Node<Vertex<E>> auxVertex = listVertex.getHead();
+            while (auxVertex != null) {
+                if (!auxVertex.data.equals(current)) {
+                    ListLinked.Node<Edge<E>> auxEdge = auxVertex.data.listAdj.getHead();
+                    while (auxEdge != null) {
+                        if (auxEdge.data.getRefDest().equals(current)) {
+                            if (!visitados.contains(auxVertex.data)) {
+                                visitados.add(auxVertex.data);
+                                queue.offer(auxVertex.data);
+                            }
+                        }
+                        auxEdge = auxEdge.next;
+                    }
+                }
+                auxVertex = auxVertex.next;
+            }
+        }
+
+        return visitados.size() == contarVertices();
     }
 
-    // Método para comparar dos grafos
-    public void compararGrafos(GraphLink<E> otroGrafo) {
-        System.out.println("=== COMPARACIÓN DE GRAFOS ===");
-        System.out.println("¿Son isomorfos?: " + (esIsomorfo(otroGrafo) ? "SÍ" : "NO"));
+    // Verificar conectividad fuerte (existe camino dirigido entre cualquier par de
+    // vértices)
+    public boolean isConexoFuerte() {
+        if (listVertex.getHead() == null) {
+            return true;
+        }
 
-        System.out.println("\nGrafo 1:");
-        System.out.println("  Vértices: " + this.contarVertices());
-        System.out.println("  Aristas: " + this.contarAristas());
-        System.out.println("  Grados: " + this.obtenerSecuenciaGrados());
-
-        System.out.println("\nGrafo 2:");
-        System.out.println("  Vértices: " + otroGrafo.contarVertices());
-        System.out.println("  Aristas: " + otroGrafo.contarAristas());
-        System.out.println("  Grados: " + otroGrafo.obtenerSecuenciaGrados());
+        // Verificar que desde cualquier vértice se puede llegar a todos los demás
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            if (!puedeAlcanzarTodos(aux.data)) {
+                return false;
+            }
+            aux = aux.next;
+        }
+        return true;
     }
 
+    // Método auxiliar para verificar si un vértice puede alcanzar todos los demás
+    private boolean puedeAlcanzarTodos(Vertex<E> start) {
+        Set<Vertex<E>> visitados = new HashSet<>();
+        Queue<Vertex<E>> queue = new LinkedList<>();
+
+        queue.offer(start);
+        visitados.add(start);
+
+        while (!queue.isEmpty()) {
+            Vertex<E> current = queue.poll();
+            ListLinked.Node<Edge<E>> adj = current.listAdj.getHead();
+            while (adj != null) {
+                Vertex<E> neighbor = adj.data.getRefDest();
+                if (!visitados.contains(neighbor)) {
+                    visitados.add(neighbor);
+                    queue.offer(neighbor);
+                }
+                adj = adj.next;
+            }
+        }
+
+        return visitados.size() == contarVertices();
+    }
+
+    // Método para mostrar análisis completo del grafo dirigido
+    public void analizarGrafoDirigido() {
+        System.out.println("=== ANÁLISIS DE GRAFO DIRIGIDO ===");
+        System.out.println("Total de vértices: " + contarVertices());
+        System.out.println("Conectividad débil: " + (isConexoDebil() ? "SÍ" : "NO"));
+        System.out.println("Conectividad fuerte: " + (isConexoFuerte() ? "SÍ" : "NO"));
+        System.out.println("Es camino dirigido: " + (esCaminoDirigido() ? "SÍ" : "NO"));
+        System.out.println("Es ciclo dirigido: " + (esCicloDirigido() ? "SÍ" : "NO"));
+        System.out.println("Es rueda dirigida: " + (esRuedaDirigida() ? "SÍ" : "NO"));
+        System.out.println("Es completo dirigido: " + (esCompletoDirigido() ? "SÍ" : "NO"));
+
+        System.out.println("\n=== GRADOS DE CADA VÉRTICE ===");
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            E data = aux.data.getData();
+            int gradoEntrada = gradoEntradaDirigido(data);
+            int gradoSalida = gradoSalidaDirigido(data);
+            System.out.println("Vértice " + data + ": in=" + gradoEntrada + ", out=" + gradoSalida + ", total="
+                    + (gradoEntrada + gradoSalida));
+            aux = aux.next;
+        }
+    }
+
+    // Método para insertar arista dirigida (para diferenciarlo del no dirigido)
+    public void insertDirectedEdge(E verOri, E verDes) {
+        Vertex<E> vOri = findVertex(verOri);
+        Vertex<E> vDes = findVertex(verDes);
+
+        if (vOri != null && vDes != null) {
+            // Solo verificar que no exista ya la arista dirigida específica
+            if (!searchEdge(verOri, verDes)) {
+                Edge<E> edge = new Edge<>(vDes);
+                vOri.listAdj.add(edge);
+            }
+        }
+    }
+
+    // Método para insertar arista dirigida con peso
+    public void insertDirectedEdgeWeight(E v, E z, int w) {
+        Vertex<E> vOri = findVertex(v);
+        Vertex<E> vDes = findVertex(z);
+
+        if (vOri != null && vDes != null) {
+            if (!searchEdge(v, z)) {
+                Edge<E> edge = new Edge<>(vDes, w);
+                vOri.listAdj.add(edge);
+            }
+        }
+    }
 }
 
