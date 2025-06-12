@@ -1,4 +1,4 @@
-package LAB9.graph0;
+package LAB9.graph5;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,9 +32,19 @@ public class GraphLink<E> {
         Vertex<E> vDes = findVertex(verDes);
 
         if (vOri != null && vDes != null) {
-            Edge<E> edge = new Edge<>(vDes);
-            vOri.listAdj.add(edge);
+        // Verificar que no exista ya la arista para evitar duplicados
+        if (!searchEdge(verOri, verDes)) {
+            Edge<E> edge1 = new Edge<>(vDes);
+            vOri.listAdj.add(edge1);
+            
+            // Solo agregar la arista inversa si no es un self-loop
+            if (!vOri.equals(vDes)) {
+                Edge<E> edge2 = new Edge<>(vOri);
+                vDes.listAdj.add(edge2);
+            }
         }
+    }
+        
     }
 
     //método para buscar un vértice
@@ -372,41 +382,315 @@ public class GraphLink<E> {
     }
 
 
-
-    /*//2.c extra método para verificar si el grafo es conexo
-    public boolean isConexo() {
-        if (listVertex.isEmpty()) {
-            return true; // Un grafo vacío se considera conexo
-        }
-
-        // Obtener el primer vértice
-        Vertex<E> primerVertice = listVertex.get(0);
-        
-        // Realizar DFS desde el primer vértice
-        ListLinked<Vertex<E>> visitados = new ListLinked<>();
-        dfsParaConexo(primerVertice, visitados);
-        
-        // Verificar si todos los vértices fueron visitados
-        return visitados.size() == listVertex.size();
-    }
-
-    private void dfsParaConexo(Vertex<E> vertex, ListLinked<Vertex<E>> visitados) {
-        visitados.add(vertex);
-        
-        ListLinked.Node<Edge<E>> aux = vertex.listAdj.getHead();
-        while (aux != null) {
-            Vertex<E> adjacent = aux.data.getRefDest();
-            
-            if (!isvisitados(adjacent, visitados)) {
-                dfsParaConexo(adjacent, visitados);
-            }
-            aux = aux.next;
-        }
-    }*/
-
     @Override
     public String toString() {
         return listVertex.toString();
+    }
+
+    //JERCICIO 5
+
+    // a) Grado de un nodo (Gx) - cantidad de aristas conectadas del nodo
+    public int gradoNodo(E data) {
+        Vertex<E> vertex = findVertex(data);
+        if (vertex == null) {
+            throw new IllegalArgumentException("El vértice " + data + " no existe en el grafo");
+        }
+
+        int grado = 0;
+        ListLinked.Node<Edge<E>> aux = vertex.listAdj.getHead();
+        while (aux != null) {
+            grado++;
+            aux = aux.next;
+        }
+        return grado;
+    }
+
+    // Método auxiliar para contar el número total de vértices
+    public int contarVertices() {
+        int count = 0;
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            count++;
+            aux = aux.next;
+        }
+        return count;
+    }
+
+    // b) Camino (Px) - si todas las aristas están conectadas, sin conectar inicio y
+    // final
+    public boolean esCamino() {
+        if (!isConexo()) {
+            return false;
+        }
+        int totalVertices = contarVertices();
+        if (totalVertices < 2) {
+            return false;
+        }
+        // Para ser un camino: exactamente 2 nodos de grado 1 y el resto de grado 2
+        int nodosGrado1 = 0;
+        int nodosGrado2 = 0;
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            int grado = gradoNodo(aux.data.getData());
+            if (grado == 1) {
+                nodosGrado1++;
+            } else if (grado == 2) {
+                nodosGrado2++;
+            } else {
+                return false; // Si hay nodos con grado diferente a 1 o 2
+            }
+            aux = aux.next;
+        }
+        return nodosGrado1 == 2 && nodosGrado2 == (totalVertices - 2);
+    }
+
+    // c) Ciclo (Cx) - si todas las aristas están conectadas, conectando inicio y
+    // final
+    public boolean esCiclo() {
+        if (!isConexo()) {
+            return false;
+        }
+        int totalVertices = contarVertices();
+        if (totalVertices < 3) {
+            return false;
+        }
+        // Para ser un ciclo: todos los nodos deben tener grado 2
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            if (gradoNodo(aux.data.getData()) != 2) {
+                return false;
+            }
+            aux = aux.next;
+        }
+        return true;
+    }
+
+    //d) Rueda (Wx) - todos los nodos conectados menos uno formando ciclo,
+    //el suelto conectado con todos los demás
+    public boolean esRueda() {
+        int totalVertices = contarVertices();
+        if (totalVertices < 4) {
+            return false; // Una rueda necesita al menos 4 nodos
+        }
+        if (!isConexo()) {
+            return false;
+        }
+        // Buscar el nodo central (debe tener grado n-1)
+        Vertex<E> nodoCentral = null;
+        int nodosConGradoMaximo = 0;
+
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            int grado = gradoNodo(aux.data.getData());
+            if (grado == totalVertices - 1) {
+                nodoCentral = aux.data;
+                nodosConGradoMaximo++;
+            }
+            aux = aux.next;
+        }
+        if (nodosConGradoMaximo != 1) {
+            return false; // Debe haber exactamente un nodo central
+        }
+        // Los demás nodos deben tener grado 3
+        // (conectados al centro y a 2 vecinos en el ciclo)
+        aux = listVertex.getHead();
+        while (aux != null) {
+            if (!aux.data.equals(nodoCentral)) {
+                if (gradoNodo(aux.data.getData()) != 3) {
+                    return false;
+                }
+            }
+            aux = aux.next;
+        }
+        // Verificar que los nodos no centrales formen un ciclo
+        // (cada nodo externo debe estar conectado exactamente a 2 otros nodos externos)
+        aux = listVertex.getHead();
+        while (aux != null) {
+            if (!aux.data.equals(nodoCentral)) {
+                int conexionesExternas = 0;
+                ListLinked.Node<Edge<E>> auxEdge = aux.data.listAdj.getHead();
+                while (auxEdge != null) {
+                    if (!auxEdge.data.getRefDest().equals(nodoCentral)) {
+                        conexionesExternas++;
+                    }
+                    auxEdge = auxEdge.next;
+                }
+                if (conexionesExternas != 2) {
+                    return false;
+                }
+            }
+            aux = aux.next;
+        }
+        return true;
+    }
+
+    //e) Completo (Kx) - si todos los nodos y sus vértices están conectados entre SI
+    public boolean esCompleto() {
+        int totalVertices = contarVertices();
+        if (totalVertices < 2) {
+            return totalVertices <= 1; // Un grafo vacío o con 1 vértice es completo
+        }
+        //En un grafo completo, cada nodo debe tener grado (n-1)
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        while (aux != null) {
+            if (gradoNodo(aux.data.getData()) != totalVertices - 1) {
+                return false;
+            }
+            aux = aux.next;
+        }
+        //Verificar que efectivamente cada nodo esté conectado a todos los demás
+        aux = listVertex.getHead();
+        while (aux != null) {
+            Vertex<E> vertexActual = aux.data;
+            //Verificar conexiones con todos los otros vértices
+            ListLinked.Node<Vertex<E>> auxOtros = listVertex.getHead();
+            while (auxOtros != null) {
+                if (!auxOtros.data.equals(vertexActual)) {
+                    // Buscar si existe arista entre vertexActual y auxOtros.data
+                    boolean encontrada = false;
+                    ListLinked.Node<Edge<E>> auxEdge = vertexActual.listAdj.getHead();
+                    while (auxEdge != null) {
+                        if (auxEdge.data.getRefDest().equals(auxOtros.data)) {
+                            encontrada = true;
+                            break;
+                        }
+                        auxEdge = auxEdge.next;
+                    }
+                    if (!encontrada) {
+                        return false;
+                    }
+                }
+                auxOtros = auxOtros.next;
+            }
+            aux = aux.next;
+        }
+        return true;
+    }
+
+    // Métodos auxiliares para crear grafos específicos (útiles para testing)
+
+    // Crear un camino P_n
+    public static GraphLink<Integer> crearCamino(int n) {
+        GraphLink<Integer> grafo = new GraphLink<>();
+
+        // Insertar vértices
+        for (int i = 0; i < n; i++) {
+            grafo.insertVertex(i);
+        }
+
+        // Conectar en secuencia
+        for (int i = 0; i < n - 1; i++) {
+            grafo.insertEdge(i, i + 1);
+            grafo.insertEdge(i + 1, i); // Para grafo no dirigido
+        }
+
+        return grafo;
+    }
+
+    // Crear un ciclo C_n
+    public static GraphLink<Integer> crearCiclo(int n) {
+        GraphLink<Integer> grafo = new GraphLink<>();
+
+        // Insertar vértices
+        for (int i = 0; i < n; i++) {
+            grafo.insertVertex(i);
+        }
+
+        // Conectar en secuencia
+        for (int i = 0; i < n - 1; i++) {
+            grafo.insertEdge(i, i + 1);
+            grafo.insertEdge(i + 1, i); // Para grafo no dirigido
+        }
+
+        // Cerrar el ciclo
+        grafo.insertEdge(n - 1, 0);
+        grafo.insertEdge(0, n - 1);
+
+        return grafo;
+    }
+
+    // Crear una rueda W_n
+    public static GraphLink<Integer> crearRueda(int n) {
+        GraphLink<Integer> grafo = new GraphLink<>();
+
+        // Insertar vértices
+        for (int i = 0; i < n; i++) {
+            grafo.insertVertex(i);
+        }
+
+        // El nodo 0 será el centro, conectarlo con todos los demás
+        for (int i = 1; i < n; i++) {
+            grafo.insertEdge(0, i);
+            grafo.insertEdge(i, 0); // Para grafo no dirigido
+        }
+
+        // Crear ciclo con los nodos externos (1 a n-1)
+        for (int i = 1; i < n - 1; i++) {
+            grafo.insertEdge(i, i + 1);
+            grafo.insertEdge(i + 1, i); // Para grafo no dirigido
+        }
+
+        // Cerrar el ciclo externo
+        grafo.insertEdge(n - 1, 1);
+        grafo.insertEdge(1, n - 1);
+
+        return grafo;
+    }
+
+    // Crear un grafo completo K_n
+    public static GraphLink<Integer> crearCompleto(int n) {
+        GraphLink<Integer> grafo = new GraphLink<>();
+
+        // Insertar vértices
+        for (int i = 0; i < n; i++) {
+            grafo.insertVertex(i);
+        }
+
+        // Conectar cada vértice con todos los demás
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                grafo.insertEdge(i, j);
+                grafo.insertEdge(j, i); // Para grafo no dirigido
+            }
+        }
+
+        return grafo;
+    }
+
+    // EJERCICIO 6
+    // REPRESENTACIÓN FORMAL
+    public void mostrarRepresentacionFormal() {
+        System.out.println("=== REPRESENTACIÓN FORMAL ===");
+        System.out.print("V = {");
+        ListLinked.Node<Vertex<E>> aux = listVertex.getHead();
+        boolean first = true;
+        while (aux != null) {
+            if (!first)
+                System.out.print(", ");
+            System.out.print(aux.data.getData());
+            first = false;
+            aux = aux.next;
+        }
+        System.out.println("}");
+
+        System.out.print("E = {");
+        first = true;
+        aux = listVertex.getHead();
+        while (aux != null) {
+            ListLinked.Node<Edge<E>> edge = aux.data.listAdj.getHead();
+            while (edge != null) {
+                // Solo mostrar una vez cada arista (evitar duplicados)
+                if (aux.data.getData().toString().compareTo(edge.data.getRefDest().getData().toString()) < 0) {
+                    if (!first)
+                        System.out.print(", ");
+                    System.out.print("(" + aux.data.getData() + "," + edge.data.getRefDest().getData() + ")");
+                    first = false;
+                }
+                edge = edge.next;
+            }
+            aux = aux.next;
+        }
+        System.out.println("}");
     }
 }
 

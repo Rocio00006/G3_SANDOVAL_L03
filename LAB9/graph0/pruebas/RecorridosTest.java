@@ -8,7 +8,8 @@ public class RecorridosTest {
         
         //testDFSLineal();
         //testDFSConCiclo();
-        testDFSGrafoComplejo();
+        //testDFSGrafoComplejo();
+        testBFSGrafoComplejo();
         //testDFSVerticeAislado();
         //testDFSVerticeInexistente();
         //testDFSGrafoDesconectado();
@@ -38,6 +39,7 @@ public class RecorridosTest {
         graph.dfs("C");  // Debería visitar: C D
         graph.dfs("D");  // Debería visitar: D
         System.out.println();
+
     }
     
     // ============= CASO 2: GRAFO CON CICLO =============
@@ -94,6 +96,35 @@ public class RecorridosTest {
         graph.dfs(1);  //Explorará todo el grafo desde 1
         graph.dfs(2);  //Explorará desde 2
         graph.dfs(5);  //Explorará desde 5
+        System.out.println();
+    }
+    // ============= C3.2: RECORRIDO AMPLITUD bfs =============
+    public static void testBFSGrafoComplejo() {
+        System.out.println("Recorrido BFS");
+        GraphLink<Integer> graph = new GraphLink<>();
+
+        graph.insertVertex(1);
+        graph.insertVertex(2);
+        graph.insertVertex(3);
+        graph.insertVertex(4);
+        graph.insertVertex(5);
+        graph.insertVertex(6);
+        
+        graph.insertEdge(1, 2);
+        graph.insertEdge(1, 3);
+        graph.insertEdge(2, 4);
+        graph.insertEdge(2, 5);
+        graph.insertEdge(3, 5);
+        graph.insertEdge(5, 6);
+        graph.insertEdge(6, 4);
+        
+        System.out.println("Grafo complejo:");
+        System.out.println("Estructura:\n" + graph);
+        
+        System.out.println("DFS desde diferentes vértices:");
+        graph.bfs(1);  //Explorará todo el grafo desde 1
+        graph.bfs(2);  //Explorará desde 2
+        graph.bfs(5);  //Explorará desde 5
         System.out.println();
     }
     
