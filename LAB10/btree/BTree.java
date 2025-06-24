@@ -108,7 +108,7 @@ class BTree<E extends Comparable<E>> {
         int[] pos = new int[1];
         boolean found = node.searchNode(cl, pos);
         if (found) {
-            System.out.println(cl + " se encuentra en el nodo con claves: " + node);
+            System.out.println(cl + " se encuentra en el nodo " + node.getIdNode() + " en la posición " + pos[0]);
             return true;
         } else {
             return searchRecursive(node.childs.get(pos[0]), cl);
@@ -255,13 +255,14 @@ class BTree<E extends Comparable<E>> {
 
                 BNode<Integer> nodo = new BNode<>(orden);
                 nodo.count = partes.length - 2;
-                /*for (int i = 2; i < partes.length; i++) {
-                    nodo.keys.set(i - 2, Integer.parseInt(partes[i]));
-                }*/
                 for (int i = 2; i < partes.length; i++) {
+                    nodo.keys.set(i - 2, Integer.parseInt(partes[i]));
+                }
+                nodo.count = partes.length - 2;
+                /*for (int i = 2; i < partes.length; i++) {
                     nodo.keys.add(Integer.parseInt(partes[i]));
                 }
-                nodo.count = nodo.keys.size();
+                nodo.count = nodo.keys.size();*/
 
                 nodos.put(id, nodo);
                 niveles.put(id, nivel);
@@ -304,6 +305,31 @@ class BTree<E extends Comparable<E>> {
             throw new ItemNoFound("Error al construir el árbol B: " + e.getMessage());
         }
     }
+
+    //ejercicio4
+    public String buscarNombre(int codigo) {
+        if (!(root != null && root.keys.get(0) instanceof RegistroEstudiante))
+            return "Operación no soportada para este tipo";
+
+        RegistroEstudiante dummy = new RegistroEstudiante(codigo, "");
+        RegistroEstudiante resultado = buscarNombreRec(root, dummy);
+        return resultado != null ? resultado.getNombre() : "No encontrado";
+    }
+
+    @SuppressWarnings("unchecked")
+    private RegistroEstudiante buscarNombreRec(BNode<E> node, RegistroEstudiante buscado) {
+        if (node == null) return null;
+
+        for (int i = 0; i < node.count; i++) {
+            RegistroEstudiante actual = (RegistroEstudiante) node.keys.get(i);
+            int cmp = buscado.compareTo(actual);
+            if (cmp == 0) return actual;
+            if (cmp < 0) return buscarNombreRec(node.childs.get(i), buscado);
+        }
+        return buscarNombreRec(node.childs.get(node.count), buscado);
+    }
+
+
 
     public static class ItemNoFound extends Exception {
         public ItemNoFound(String msg) {
